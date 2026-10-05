@@ -6,47 +6,30 @@ const prisma = new PrismaClient();
 async function main() {
     console.log('🌱 Starting multi-tenant database seed...');
 
-    // 1. Clean existing records
-    await prisma.auditLog.deleteMany();
-    await prisma.stockMovement.deleteMany();
-    await prisma.stockLevel.deleteMany();
-    await prisma.product.deleteMany();
-    await prisma.category.deleteMany();
-    await prisma.warehouse.deleteMany();
-    await prisma.user.deleteMany();
-    await prisma.organization.deleteMany();
+    // Get the first organization created from your Clerk login, or create a default
+    let org = await prisma.organization.findFirst();
 
-    // 2. Create Default Organization
-    const org = await prisma.organization.create({
-        data: {
-            clerkOrgId: 'org_demo_123456789',
-            name: 'Acme Logistics Corp',
-            slug: 'acme-logistics',
-        },
-    });
+    if (!org) {
+        org = await prisma.organization.create({
+            data: {
+                clerkOrgId: 'org_demo_123456789',
+                name: "Rayyan's Organization",
+                slug: 'rayyans-organization',
+            },
+        });
+    }
 
-    // 3. Create Demo Users mapped to Organization
-    const admin = await prisma.user.create({
-        data: {
-            clerkUserId: 'user_admin_demo',
-            organizationId: org.id,
-            email: 'admin@acmelogistics.io',
-            name: 'Sarah Connor',
-            role: Role.ORG_ADMIN,
-        },
-    });
+    console.log(`📦 Seeding data for Organization ID: ${org.id} (${org.name})`);
 
-    const manager = await prisma.user.create({
-        data: {
-            clerkUserId: 'user_manager_demo',
-            organizationId: org.id,
-            email: 'manager@acmelogistics.io',
-            name: 'Alex Mercer',
-            role: Role.WAREHOUSE_MANAGER,
-        },
-    });
+    // 1. Clean existing records for this org
+    await prisma.auditLog.deleteMany({ where: { organizationId: org.id } });
+    await prisma.stockMovement.deleteMany({ where: { organizationId: org.id } });
+    await prisma.stockLevel.deleteMany({ where: { organizationId: org.id } });
+    await prisma.product.deleteMany({ where: { organizationId: org.id } });
+    await prisma.category.deleteMany({ where: { organizationId: org.id } });
+    await prisma.warehouse.deleteMany({ where: { organizationId: org.id } });
 
-    // 4. Create Warehouses scoped to Organization
+    // 2. Create Warehouses
     const whEast = await prisma.warehouse.create({
         data: {
             organizationId: org.id,
@@ -65,7 +48,7 @@ async function main() {
         },
     });
 
-    // 5. Create Category & Products
+    // 3. Create Category & Products
     const electronics = await prisma.category.create({
         data: {
             organizationId: org.id,
@@ -96,7 +79,7 @@ async function main() {
         },
     });
 
-    // 6. Create Initial Multi-Tenant Stock Levels
+    // 4. Create Stock Levels
     await prisma.stockLevel.createMany({
         data: [
             { organizationId: org.id, productId: macbook.id, warehouseId: whEast.id, quantity: 45, minThreshold: 10 },
@@ -105,20 +88,7 @@ async function main() {
         ],
     });
 
-    // 7. Record Inbound Movement
-    await prisma.stockMovement.create({
-        data: {
-            organizationId: org.id,
-            type: MovementType.INBOUND,
-            quantity: 45,
-            notes: 'Initial bulk shipment received from manufacturer',
-            productId: macbook.id,
-            targetWarehouseId: whEast.id,
-            userId: manager.id,
-        },
-    });
-
-    console.log('✅ Multi-tenant database successfully seeded!');
+    console.log('✅ Multi-tenant database successfully seeded for your active organization!');
 }
 
 main()
