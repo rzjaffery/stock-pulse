@@ -4,6 +4,7 @@
 import { db } from '@/lib/db';
 import { MovementType } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import {sendLowStockAlertEmail} from "@/lib/email";
 
 export interface TransferStockInput {
     productId: string;
@@ -103,6 +104,30 @@ export async function transferStockAction(input: TransferStockInput) {
                     }),
                 },
             });
+            const updatedSourceStock = await tx.stockLevel.findUnique({
+                where: {
+                    productId_warehouseId: {
+                        productId,
+                        warehouseId: sourceWarehouseId,
+                    },
+                },
+                include: {
+                    product: true,
+                    warehouse: true,
+                },
+            });
+
+            if (updatedSourceStock && updatedSourceStock.quantity <= updatedSourceStock.minThreshold) {
+                // Fire-and-forget alert email after successful commit
+                sendLowStockAlertEmail({
+                    productName: updatedSourceStock.product.name,
+                    sku: updatedSourceStock.product.sku,
+                    warehouseName: updatedSourceStock.warehouse.name,
+                    warehouseCode: updatedSourceStock.warehouse.code,
+                    currentQuantity: updatedSourceStock.quantity,
+                    minThreshold: updatedSourceStock.minThreshold,
+                });
+            }
 
             return movement;
         });
@@ -110,6 +135,8 @@ export async function transferStockAction(input: TransferStockInput) {
         // Refresh Next.js Server Component cache instantly
         revalidatePath('/inventory');
         revalidatePath('/dashboard');
+
+
 
         return { success: true, data: result };
     } catch (error:any) {
