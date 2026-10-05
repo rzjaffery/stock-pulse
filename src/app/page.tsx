@@ -2,19 +2,18 @@
 import { db } from '@/lib/db';
 import { getTenantContext } from '@/lib/tenant';
 import { getDashboardMetrics } from '@/app/actions/queries';
+import { getFilteredInventory, getFilteredMovements } from '@/app/actions/inventory';
 import TransferModal from '@/components/TransferModal';
+import StockTable from '@/components/StockTable';
+import MovementsTable from '@/components/MovementsTable';
 
-export const revalidate = 0; // Fresh database fetches per request
+export const revalidate = 0;
 
 export default async function DashboardPage() {
-  // 1. Get multi-tenant auth context
   const { organizationId } = await getTenantContext();
 
-  // 2. Fetch scoped metrics
-  const metrics = await getDashboardMetrics();
-
-  // 3. Fetch scoped lists for dropdowns
-  const [warehouses, products, rawUsers] = await Promise.all([
+  const [metrics, warehouses, products, rawUsers, stockLevels, movements] = await Promise.all([
+    getDashboardMetrics(),
     db.warehouse.findMany({
       where: { organizationId },
       select: { id: true, name: true, code: true },
@@ -27,18 +26,18 @@ export default async function DashboardPage() {
       where: { organizationId },
       select: { id: true, name: true, email: true },
     }),
+    getFilteredInventory(),
+    getFilteredMovements(),
   ]);
 
-  // Ensure 'name' is always a valid string (never null) to satisfy TransferModal props
-  const users = rawUsers.map((user) => ({
-    id: user.id,
-    name: user.name || user.email || 'Unnamed User',
+  const users = rawUsers.map((u) => ({
+    id: u.id,
+    name: u.name || u.email || 'Unnamed User',
   }));
 
   return (
       <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">
         <div className="max-w-7xl mx-auto space-y-8">
-
           {/* Top Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-slate-800">
             <div>
@@ -79,6 +78,11 @@ export default async function DashboardPage() {
             </div>
           </div>
 
+          {/* Product Catalog & Stock Table */}
+          <StockTable initialStock={stockLevels} warehouses={warehouses} />
+
+          {/* Stock Movement Audit Log Table */}
+          <MovementsTable initialMovements={movements} />
         </div>
       </div>
   );
