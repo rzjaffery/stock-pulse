@@ -14,7 +14,7 @@ export default async function DashboardPage() {
   const metrics = await getDashboardMetrics();
 
   // 3. Fetch scoped lists for dropdowns
-  const [warehouses, products, users] = await Promise.all([
+  const [warehouses, products, rawUsers] = await Promise.all([
     db.warehouse.findMany({
       where: { organizationId },
       select: { id: true, name: true, code: true },
@@ -25,9 +25,15 @@ export default async function DashboardPage() {
     }),
     db.user.findMany({
       where: { organizationId },
-      select: { id: true, name: true },
+      select: { id: true, name: true, email: true },
     }),
   ]);
+
+  // Ensure 'name' is always a valid string (never null) to satisfy TransferModal props
+  const users = rawUsers.map((user) => ({
+    id: user.id,
+    name: user.name || user.email || 'Unnamed User',
+  }));
 
   return (
       <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-10 font-sans">

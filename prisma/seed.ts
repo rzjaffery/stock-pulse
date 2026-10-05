@@ -1,27 +1,22 @@
 // prisma/seed.ts
-import { PrismaClient, Role, MovementType } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
-    console.log('🌱 Starting multi-tenant database seed...');
+    console.log('🌱 Seeding database...');
 
-    // Get the first organization created from your Clerk login, or create a default
-    let org = await prisma.organization.findFirst();
+    // Find the Organization created when you logged into Clerk and viewed the page
+    const org = await prisma.organization.findFirst();
 
     if (!org) {
-        org = await prisma.organization.create({
-            data: {
-                clerkOrgId: 'org_demo_123456789',
-                name: "Rayyan's Organization",
-                slug: 'rayyans-organization',
-            },
-        });
+        console.error('❌ No Organization found in database! Please sign in once on http://localhost:3000 to auto-create your organization.');
+        return;
     }
 
-    console.log(`📦 Seeding data for Organization ID: ${org.id} (${org.name})`);
+    console.log(`📦 Seeding data directly into active Organization: "${org.name}" (ID: ${org.id})`);
 
-    // 1. Clean existing records for this org
+    // Clean old data for this org
     await prisma.auditLog.deleteMany({ where: { organizationId: org.id } });
     await prisma.stockMovement.deleteMany({ where: { organizationId: org.id } });
     await prisma.stockLevel.deleteMany({ where: { organizationId: org.id } });
@@ -29,7 +24,7 @@ async function main() {
     await prisma.category.deleteMany({ where: { organizationId: org.id } });
     await prisma.warehouse.deleteMany({ where: { organizationId: org.id } });
 
-    // 2. Create Warehouses
+    // 1. Create Warehouses
     const whEast = await prisma.warehouse.create({
         data: {
             organizationId: org.id,
@@ -48,12 +43,12 @@ async function main() {
         },
     });
 
-    // 3. Create Category & Products
+    // 2. Create Category & Products
     const electronics = await prisma.category.create({
         data: {
             organizationId: org.id,
             name: 'Electronics & Computing',
-            description: 'Laptops, Monitors, and Accessories',
+            description: 'Laptops and Monitors',
         },
     });
 
@@ -63,7 +58,7 @@ async function main() {
             categoryId: electronics.id,
             sku: 'ELEC-MBP-16',
             name: 'MacBook Pro 16"',
-            description: 'M3 Max, 36GB Unified Memory, 1TB SSD',
+            description: 'M3 Max, 36GB Memory, 1TB SSD',
             unitPrice: 3499.0,
         },
     });
@@ -74,12 +69,12 @@ async function main() {
             categoryId: electronics.id,
             sku: 'ELEC-DELL-U27',
             name: 'Dell UltraSharp 27" 4K Monitor',
-            description: 'USB-C Hub, IPS Black Panel',
+            description: 'USB-C Hub IPS Panel',
             unitPrice: 619.0,
         },
     });
 
-    // 4. Create Stock Levels
+    // 3. Create Stock Levels
     await prisma.stockLevel.createMany({
         data: [
             { organizationId: org.id, productId: macbook.id, warehouseId: whEast.id, quantity: 45, minThreshold: 10 },
@@ -88,12 +83,12 @@ async function main() {
         ],
     });
 
-    console.log('✅ Multi-tenant database successfully seeded for your active organization!');
+    console.log('✅ Successfully seeded warehouses and products into your organization!');
 }
 
 main()
     .catch((e) => {
-        console.error('❌ Seeding error:', e);
+        console.error(e);
         process.exit(1);
     })
     .finally(async () => {
