@@ -1,0 +1,124 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ------------------------------------------------------
+// ENUMS
+// ------------------------------------------------------
+
+enum Role {
+  ADMIN
+  MANAGER
+  CLERK
+}
+
+enum MovementType {
+  INBOUND // Stock received from supplier
+  OUTBOUND // Stock shipped to customer
+  TRANSFER // Stock moved between internal warehouses
+  ADJUSTMENT // Manual override (e.g., damaged/lost items)
+}
+
+// ------------------------------------------------------
+// MODELS
+// ------------------------------------------------------
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(CLERK)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  movements StockMovement[]
+  auditLogs AuditLog[]
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  products Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  sku         String   @unique // Stock Keeping Unit (e.g., "ELEC-MBP-16")
+  name        String
+  description String?
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  stockLevels StockLevel[]
+  movements   StockMovement[]
+}
+
+model Warehouse {
+  id       String @id @default(cuid())
+  name     String // e.g., "Central Distribution Center"
+  code     String @unique // e.g., "WH-EAST-01"
+  location String
+
+  stockLevels StockLevel[]
+
+  sourceMovements StockMovement[] @relation("SourceWarehouse")
+  targetMovements StockMovement[] @relation("TargetWarehouse")
+}
+
+model StockLevel {
+  id          String    @id @default(cuid())
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+
+  quantity     Int      @default(0)
+  minThreshold Int      @default(10) // Low stock alert trigger
+  updatedAt    DateTime @updatedAt
+
+  @@unique([productId, warehouseId]) // Ensures one unique stock row per product per warehouse
+}
+
+model StockMovement {
+  id        String       @id @default(cuid())
+  type      MovementType
+  quantity  Int
+  notes     String?
+  createdAt DateTime     @default(now())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+
+  sourceWarehouseId String?
+  sourceWarehouse   Warehouse? @relation("SourceWarehouse", fields: [sourceWarehouseId], references: [id])
+
+  targetWarehouseId String?
+  targetWarehouse   Warehouse? @relation("TargetWarehouse", fields: [targetWarehouseId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String // e.g., "UPDATE_ROLE", "DELETE_PRODUCT"
+  entity    String // e.g., "Product", "User"
+  entityId  String
+  details   String? // JSON string of metadata
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
