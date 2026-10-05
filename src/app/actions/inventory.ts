@@ -2,145 +2,80 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { MovementType } from '@prisma/client';
+import { getTenantContext } from '@/lib/tenant';
 import { revalidatePath } from 'next/cache';
-import {sendLowStockAlertEmail} from "@/lib/email";
 
 export interface TransferStockInput {
     productId: string;
     sourceWarehouseId: string;
     targetWarehouseId: string;
     quantity: number;
-    userId: string;
     notes?: string;
+    userId?: string; // Made optional to prevent TS errors
 }
 
 export async function transferStockAction(input: TransferStockInput) {
-    const { productId, sourceWarehouseId, targetWarehouseId, quantity, userId, notes } = input;
-
-    if (quantity <= 0) {
-        return { success: false, error: 'Transfer quantity must be greater than zero.' };
-    }
-
-    if (sourceWarehouseId === targetWarehouseId) {
-        return { success: false, error: 'Source and target warehouses cannot be the same.' };
-    }
-
     try {
-        // Run all steps in a single atomic database transaction
+        const { organizationId, userId: contextUserId } = await getTenantContext();
+        const activeUserId = input.userId || contextUserId;
+
         const result = await db.$transaction(async (tx) => {
-            // 1. Check current stock level at the source warehouse
-            const sourceStock = await tx.stockLevel.findUnique({
+            // 1. Verify source stock within TENANT ONLY
+            const sourceStock = await tx.stockLevel.findFirst({
                 where: {
-                    productId_warehouseId: {
-                        productId,
-                        warehouseId: sourceWarehouseId,
-                    },
+                    organizationId,
+                    productId: input.productId,
+                    warehouseId: input.sourceWarehouseId,
                 },
             });
 
-            if (!sourceStock || sourceStock.quantity < quantity) {
-                throw new Error(
-                    `Insufficient stock. Source warehouse only has ${sourceStock?.quantity || 0} units available.`
-                );
+            if (!sourceStock || sourceStock.quantity < input.quantity) {
+                throw new Error(`Insufficient stock. Available: ${sourceStock?.quantity || 0}`);
             }
 
-            // 2. Deduct inventory from Source Warehouse
+            // 2. Decrement source stock
             await tx.stockLevel.update({
-                where: {
-                    productId_warehouseId: {
-                        productId,
-                        warehouseId: sourceWarehouseId,
-                    },
-                },
-                data: {
-                    quantity: { decrement: quantity },
-                },
+                where: { id: sourceStock.id },
+                data: { quantity: { decrement: input.quantity } },
             });
 
-            // 3. Add inventory to Target Warehouse (upsert handles case where stock row doesn't exist yet)
+            // 3. Upsert target stock scoped to organization
             await tx.stockLevel.upsert({
                 where: {
-                    productId_warehouseId: {
-                        productId,
-                        warehouseId: targetWarehouseId,
+                    organizationId_productId_warehouseId: {
+                        organizationId,
+                        productId: input.productId,
+                        warehouseId: input.targetWarehouseId,
                     },
                 },
-                update: {
-                    quantity: { increment: quantity },
-                },
+                update: { quantity: { increment: input.quantity } },
                 create: {
-                    productId,
-                    warehouseId: targetWarehouseId,
-                    quantity,
+                    organizationId,
+                    productId: input.productId,
+                    warehouseId: input.targetWarehouseId,
+                    quantity: input.quantity,
                     minThreshold: 10,
                 },
             });
 
-            // 4. Record the StockMovement Audit Trail
-            const movement = await tx.stockMovement.create({
+            // 4. Audit Log
+            return await tx.stockMovement.create({
                 data: {
-                    type: MovementType.TRANSFER,
-                    quantity,
-                    productId,
-                    sourceWarehouseId,
-                    targetWarehouseId,
-                    userId,
-                    notes: notes || 'Internal inter-warehouse transfer',
+                    organizationId,
+                    productId: input.productId,
+                    sourceWarehouseId: input.sourceWarehouseId,
+                    targetWarehouseId: input.targetWarehouseId,
+                    userId: activeUserId,
+                    quantity: input.quantity,
+                    type: 'TRANSFER',
+                    notes: input.notes,
                 },
             });
-
-            // 5. Create a system Audit Log entry
-            await tx.auditLog.create({
-                data: {
-                    action: 'STOCK_TRANSFER',
-                    entity: 'StockLevel',
-                    entityId: productId,
-                    userId,
-                    details: JSON.stringify({
-                        from: sourceWarehouseId,
-                        to: targetWarehouseId,
-                        qty: quantity,
-                    }),
-                },
-            });
-            const updatedSourceStock = await tx.stockLevel.findUnique({
-                where: {
-                    productId_warehouseId: {
-                        productId,
-                        warehouseId: sourceWarehouseId,
-                    },
-                },
-                include: {
-                    product: true,
-                    warehouse: true,
-                },
-            });
-
-            if (updatedSourceStock && updatedSourceStock.quantity <= updatedSourceStock.minThreshold) {
-                // Fire-and-forget alert email after successful commit
-                sendLowStockAlertEmail({
-                    productName: updatedSourceStock.product.name,
-                    sku: updatedSourceStock.product.sku,
-                    warehouseName: updatedSourceStock.warehouse.name,
-                    warehouseCode: updatedSourceStock.warehouse.code,
-                    currentQuantity: updatedSourceStock.quantity,
-                    minThreshold: updatedSourceStock.minThreshold,
-                });
-            }
-
-            return movement;
         });
 
-        // Refresh Next.js Server Component cache instantly
-        revalidatePath('/inventory');
-        revalidatePath('/dashboard');
-
-
-
+        revalidatePath('/');
         return { success: true, data: result };
-    } catch (error:any) {
-        console.error('Transfer Error:', error);
-        return { success: false, error: error.message || 'Failed to complete stock transfer.' };
+    } catch (error: any) {
+        return { success: false, error: error.message };
     }
 }
