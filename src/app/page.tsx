@@ -6,6 +6,7 @@ import { getFilteredInventory, getFilteredMovements } from '@/app/actions/invent
 import TransferModal from '@/components/TransferModal';
 import StockTable from '@/components/StockTable';
 import MovementsTable from '@/components/MovementsTable';
+import AddProductModal from "@/components/AddProductModal";
 
 export const revalidate = 0;
 
@@ -48,6 +49,7 @@ export default async function DashboardPage() {
               <p className="text-slate-400 text-sm mt-1">Multi-Tenant Inventory & Supply Chain Command Center</p>
             </div>
 
+            <AddProductModal warehouses={warehouses} />
             <TransferModal warehouses={warehouses} products={products} users={users} />
           </div>
 
