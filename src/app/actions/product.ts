@@ -89,7 +89,7 @@ export async function createProductAction(params: CreateProductParams) {
 
         revalidatePath('/');
         return { success: true };
-    } catch (error: any) {
+    } catch (error:any) {
         if (error.code === 'P2002') {
             return { success: false, error: 'A product with this SKU already exists.' };
         }

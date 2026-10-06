@@ -1,0 +1,38 @@
+// src/lib/schemas.ts
+import { z } from 'zod';
+
+export const ProductSchema = z.object({
+    name: z.string().min(2, 'Product name must be at least 2 characters'),
+    sku: z
+        .string()
+        .min(3, 'SKU must be at least 3 characters')
+        .regex(/^[A-Za-z0-9-]+$/, 'SKU must contain only letters, numbers, and hyphens')
+        .transform((val) => val.toUpperCase()),
+    description: z.string().optional(),
+    unitPrice: z.number().positive('Price must be greater than 0'),
+    warehouseId: z.string().min(1, 'Please select a target warehouse'),
+    initialQuantity: z.number().int().nonnegative('Initial quantity cannot be negative'),
+    minThreshold: z.number().int().positive('Minimum threshold must be at least 1').default(5),
+});
+
+export const WarehouseSchema = z.object({
+    name: z.string().min(2, 'Warehouse name must be at least 2 characters'),
+    code: z
+        .string()
+        .min(2, 'Warehouse code must be at least 2 characters')
+        .regex(/^[A-Za-z0-9-]+$/, 'Code must contain only letters, numbers, and hyphens')
+        .transform((val) => val.toUpperCase()),
+    location: z.string().optional(),
+});
+
+export const TransferSchema = z.object({
+    productId: z.string().min(1, 'Please select a product'),
+    sourceWarehouseId: z.string().min(1, 'Please select a source warehouse'),
+    targetWarehouseId: z.string().min(1, 'Please select a target warehouse'),
+    quantity: z.number().int().positive('Quantity must be at least 1'),
+    userId: z.string().min(1, 'Please select an operator'),
+    notes: z.string().optional(),
+}).refine((data) => data.sourceWarehouseId !== data.targetWarehouseId, {
+    message: 'Source and Target warehouses must be different',
+    path: ['targetWarehouseId'],
+});

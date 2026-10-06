@@ -2,33 +2,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import AddProductModal from '@/components/AddProductModal';
-import TransferModal from '@/components/TransferModal';
-import AddWarehouseModal from '@/components/AddWarehouseModal';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-interface Warehouse {
-    id: string;
-    name: string;
-    code: string;
-}
-interface Product {
-    id: string;
-    name: string;
-    sku: string;
-}
-interface User {
-    id: string;
-    name: string;
-}
-
-interface SidebarProps {
-    warehouses: Warehouse[];
-    products: Product[];
-    users: User[];
-}
-
-export default function Sidebar({ warehouses, products, users }: SidebarProps) {
+export default function Sidebar() {
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
+
+    const navItems = [
+        { name: 'Overview', href: '/', icon: '📊' },
+        { name: 'Analytics & BI', href: '/analytics', icon: '📈' },
+        { name: 'Products Catalog', href: '/products', icon: '📦' },
+        { name: 'Warehouses', href: '/warehouses', icon: '🏢' },
+        { name: 'Transfer Orders', href: '/transfers', icon: '⇄' },
+    ];
 
     return (
         <>
@@ -42,7 +29,7 @@ export default function Sidebar({ warehouses, products, users }: SidebarProps) {
                 </button>
             </div>
 
-            {/* Overlay for Mobile */}
+            {/* Mobile Backdrop */}
             {isOpen && (
                 <div
                     onClick={() => setIsOpen(false)}
@@ -50,7 +37,7 @@ export default function Sidebar({ warehouses, products, users }: SidebarProps) {
                 />
             )}
 
-            {/* Sidebar Container */}
+            {/* Sidebar Navigation */}
             <aside
                 className={`fixed top-0 left-0 bottom-0 z-40 w-64 bg-slate-900 border-r border-slate-800 flex flex-col justify-between p-5 transition-transform duration-300 ${
                     isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
@@ -58,7 +45,7 @@ export default function Sidebar({ warehouses, products, users }: SidebarProps) {
             >
                 <div className="space-y-6">
                     {/* SaaS Brand Logo */}
-                    <div className="flex items-center gap-3 px-2">
+                    <Link href="/" className="flex items-center gap-3 px-2">
                         <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center font-black text-white text-lg">
                             S
                         </div>
@@ -66,57 +53,34 @@ export default function Sidebar({ warehouses, products, users }: SidebarProps) {
                             <h1 className="text-base font-extrabold text-white tracking-tight">StockPulse</h1>
                             <p className="text-[10px] text-indigo-400 font-mono uppercase tracking-wider">Enterprise SaaS</p>
                         </div>
-                    </div>
+                    </Link>
 
-                    {/* Navigation Links */}
+                    {/* Navigation Items */}
                     <nav className="space-y-1">
             <span className="block px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">
-              Menu
+              Navigation
             </span>
-                        <a
-                            href="/"
-                            className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg bg-indigo-600/10 text-indigo-400 border border-indigo-500/20"
-                        >
-                            <span>📊</span> Overview
-                        </a>
-                        <a
-                            href="#catalog"
-                            className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition"
-                        >
-                            <span>📦</span> Products Catalog
-                        </a>
-                        <a
-                            href="#movements"
-                            className="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 transition"
-                        >
-                            <span>📋</span> Movement Audit Log
-                        </a>
+                        {navItems.map((item) => {
+                            const isActive = pathname === item.href;
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className={`flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-lg transition ${
+                                        isActive
+                                            ? 'bg-indigo-600/10 text-indigo-400 border border-indigo-500/20'
+                                            : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                                    }`}
+                                >
+                                    <span className="text-sm">{item.icon}</span> {item.name}
+                                </Link>
+                            );
+                        })}
                     </nav>
-
-                    {/* Quick Action Actions */}
-                    <div className="space-y-2 pt-4 border-t border-slate-800">
-            <span className="block px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">
-              Actions
-            </span>
-
-                        <AddProductModal warehouses={warehouses} />
-
-                        <TransferModal
-                            warehouses={warehouses}
-                            products={products}
-                            users={users}
-                            triggerButton={
-                                <button className="w-full flex items-center justify-start gap-3 px-3 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">
-                                    <span>⇄</span> Transfer Stock
-                                </button>
-                            }
-                        />
-
-                        <AddWarehouseModal />
-                    </div>
                 </div>
 
-                {/* Footer Tenant Status */}
+                {/* Tenant Footer */}
                 <div className="pt-4 border-t border-slate-800 text-xs text-slate-500 flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span className="truncate">Active Tenant Workspace</span>
