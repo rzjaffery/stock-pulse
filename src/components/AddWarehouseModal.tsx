@@ -1,14 +1,29 @@
-// src/components/AddWarehouseModal.tsx
 'use client';
 
 import React, { useState, useTransition } from 'react';
 import { CreateWarehouseAction } from '@/app/actions/warehouse';
 
-export default function AddWarehouseModal() {
-    const [isOpen, setIsOpen] = useState(false);
+interface AddWarehouseModalProps {
+    isOpen?: boolean;
+    onClose?: () => void;
+}
+
+export default function AddWarehouseModal({ isOpen: externalIsOpen, onClose }: AddWarehouseModalProps) {
+    const [internalIsOpen, setInternalIsOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
+
+    // Controlled or uncontrolled fallback
+    const isModalOpen = externalIsOpen !== undefined ? externalIsOpen : internalIsOpen;
+
+    const handleClose = () => {
+        if (onClose) {
+            onClose();
+        } else {
+            setInternalIsOpen(false);
+        }
+    };
 
     const [formData, setFormData] = useState({
         name: '',
@@ -33,7 +48,7 @@ export default function AddWarehouseModal() {
             } else {
                 setSuccess(true);
                 setTimeout(() => {
-                    setIsOpen(false);
+                    handleClose();
                     setSuccess(false);
                     setFormData({ name: '', code: '', location: '' });
                 }, 1200);
@@ -43,19 +58,21 @@ export default function AddWarehouseModal() {
 
     return (
         <>
-            <button
-                onClick={() => setIsOpen(true)}
-                className="w-full flex items-center justify-start gap-3 px-3 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition"
-            >
-                <span className="text-base">🏢</span> + Add Warehouse
-            </button>
+            {externalIsOpen === undefined && (
+                <button
+                    onClick={() => setInternalIsOpen(true)}
+                    className="w-full flex items-center justify-start gap-3 px-3 py-2 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                >
+                    <span className="text-base">🏢</span> + Add Warehouse
+                </button>
+            )}
 
-            {isOpen && (
+            {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
                     <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-md p-6 text-slate-100 shadow-2xl">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-bold">Add New Warehouse</h3>
-                            <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-slate-200">
+                            <button onClick={handleClose} className="text-slate-400 hover:text-slate-200">
                                 ✕
                             </button>
                         </div>
@@ -119,7 +136,7 @@ export default function AddWarehouseModal() {
                             <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                                 <button
                                     type="button"
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={handleClose}
                                     className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200"
                                 >
                                     Cancel

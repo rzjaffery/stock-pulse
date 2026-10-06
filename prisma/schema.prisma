@@ -75,7 +75,7 @@ model Category {
 model Product {
   id             String   @id @default(uuid())
   organizationId String
-  categoryId     String
+  categoryId     String?
   sku            String
   name           String
   description    String?
@@ -83,7 +83,7 @@ model Product {
   createdAt      DateTime @default(now())
 
   organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  category     Category        @relation(fields: [categoryId], references: [id])
+  category     Category?       @relation(fields: [categoryId], references: [id])
   stockLevels  StockLevel[]
   movements    StockMovement[]
 
@@ -130,7 +130,7 @@ model StockMovement {
   productId         String
   sourceWarehouseId String?
   targetWarehouseId String?
-  userId            String
+  userId            String?
   quantity          Int
   type              MovementType
   notes             String?
@@ -140,7 +140,7 @@ model StockMovement {
   product         Product      @relation(fields: [productId], references: [id])
   sourceWarehouse Warehouse?   @relation("SourceWarehouse", fields: [sourceWarehouseId], references: [id])
   targetWarehouse Warehouse?   @relation("TargetWarehouse", fields: [targetWarehouseId], references: [id])
-  user            User         @relation(fields: [userId], references: [id])
+  user            User?        @relation(fields: [userId], references: [id]) // Fixed: Made user optional (User?)
 
   @@index([organizationId])
 }
