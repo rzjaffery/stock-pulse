@@ -1,31 +1,33 @@
-'use client'
+// src/components/BulkUploadModal.tsx
+'use client';
 
-import Papa from "papaparse";
-import {useState} from "react";
+import React, { useState } from 'react';
+import Papa from 'papaparse';
 
 interface BulkUploadModalProps {
-    isOpen: boolean
-    onClose: () => void
-    title: string
-    templateCsv: string
-    templateFileName: string
-    onUpload:(data: unknown[])=> Promise<{success: boolean, errors ?: string[], count ?:number}>
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    templateCsv: string;
+    templateFileName: string;
+    onUpload: (data: Record<string, any>[]) => Promise<{ success: boolean; errors?: string[]; count?: number }>;
 }
-export default function BulkUploadModal({
-    isOpen,
-    onClose,
-    title,
-    templateCsv,
-    templateFileName,
-    onUpload,}: BulkUploadModalProps) {
 
+export default function BulkUploadModal({
+                                            isOpen,
+                                            onClose,
+                                            title,
+                                            templateCsv,
+                                            templateFileName,
+                                            onUpload,
+                                        }: BulkUploadModalProps) {
     const [file, setFile] = useState<File | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [errorLogs, setErrorLogs] = useState<string[]>([]);
 
-    if(!isOpen) return null;
+    if (!isOpen) return null;
 
-    const handleDownloadTemplate =() => {
+    const handleDownloadTemplate = () => {
         const blob = new Blob([templateCsv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -34,26 +36,27 @@ export default function BulkUploadModal({
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    }
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.files && e.target.files[0]) {
+        if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
-            setErrorLogs([])
+            setErrorLogs([]);
         }
-    }
+    };
 
     const handleSubmit = () => {
         if (!file) return;
 
         setIsUploading(true);
-        setErrorLogs([])
+        setErrorLogs([]);
 
         Papa.parse(file, {
             header: true,
             skipEmptyLines: true,
             complete: async (results) => {
-                const res = await onUpload(results.data);
+                // Cast parsed CSV rows to match onUpload prop
+                const res = await onUpload(results.data as Record<string, any>[]);
                 setIsUploading(false);
 
                 if (res.success) {
@@ -69,7 +72,7 @@ export default function BulkUploadModal({
                 setErrorLogs([`CSV Read Error: ${error.message}`]);
             },
         });
-    }
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">

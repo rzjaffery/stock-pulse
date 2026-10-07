@@ -14,8 +14,8 @@ export type BulkImportResult = {
 };
 
 // Interface for raw CSV row data passed from Papaparse
-export type RawProductRow = Record<string, string | number | undefined>;
-export type RawWarehouseRow = Record<string, string | number | undefined>;
+export type RawProductRow = Record<string, string | number | undefined | any>;
+export type RawWarehouseRow = Record<string, string | number | undefined | any>;
 
 export async function bulkImportProductsAction(
     products: RawProductRow[]
