@@ -8,10 +8,10 @@ export const ProductSchema = z.object({
         .min(3, 'SKU must be at least 3 characters')
         .regex(/^[A-Za-z0-9-]+$/, 'SKU must contain only letters, numbers, and hyphens')
         .transform((val) => val.toUpperCase()),
-    description: z.string().optional(),
+    description: z.string().optional().default(''),
     unitPrice: z.number().positive('Price must be greater than 0'),
     warehouseId: z.string().min(1, 'Please select a target warehouse'),
-    initialQuantity: z.number().int().nonnegative('Initial quantity cannot be negative'),
+    initialQuantity: z.number().int().nonnegative('Initial quantity cannot be negative').default(0),
     minThreshold: z.number().int().positive('Minimum threshold must be at least 1').default(5),
 });
 
@@ -22,9 +22,11 @@ export const WarehouseSchema = z.object({
         .min(2, 'Warehouse code must be at least 2 characters')
         .regex(/^[A-Za-z0-9-]+$/, 'Code must contain only letters, numbers, and hyphens')
         .transform((val) => val.toUpperCase()),
-    location: z.string().optional(),
+    location: z.string().optional().default(''),
 });
 
+export type ProductInput = z.infer<typeof ProductSchema>;
+export type WarehouseInput = z.infer<typeof WarehouseSchema>;
 export const TransferSchema = z.object({
     productId: z.string().min(1, 'Please select a product'),
     sourceWarehouseId: z.string().min(1, 'Please select a source warehouse'),
