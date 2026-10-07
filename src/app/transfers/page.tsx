@@ -38,7 +38,7 @@ export default async function TransfersPage() {
 
     const users = rawUsers.map((u) => ({
         id: u.id,
-        name: u.name || u.email || 'Unnamed Operator',
+        name: u.name || u.email || 'Operator',
     }));
 
     return (
@@ -51,7 +51,9 @@ export default async function TransfersPage() {
             <span className="text-xs font-semibold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded">
               Logistics
             </span>
-                        <h1 className="text-xl font-bold text-white tracking-tight mt-1">Inter-Warehouse Transfer Orders</h1>
+                        <h1 className="text-xl font-bold text-white tracking-tight mt-1">
+                            Inter-Warehouse Transfer Orders
+                        </h1>
                     </div>
 
                     <TransferModal
@@ -67,10 +69,10 @@ export default async function TransfersPage() {
                 </header>
 
                 <main className="p-6 md:p-8 space-y-6 max-w-7xl">
-                    {/* Status Metrics Overview */}
+                    {/* Executive Overview KPI Cards */}
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
-                            <span className="text-xs font-semibold uppercase text-slate-400">Total Orders</span>
+                            <span className="text-xs font-semibold uppercase text-slate-400">Total Transfers</span>
                             <p className="text-2xl font-bold mt-1 text-white">{transfers.length}</p>
                         </div>
                         <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl">
@@ -93,8 +95,8 @@ export default async function TransfersPage() {
                         </div>
                     </div>
 
-                    {/* Interactive Filterable Table Component */}
-                    <TransferTableClient initialTransfers={transfers as never} warehouses={warehouses} />
+                    {/* Interactive Client Table Component */}
+                    <TransferTableClient initialTransfers={transfers as any} warehouses={warehouses} />
                 </main>
             </div>
         </div>

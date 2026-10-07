@@ -34,7 +34,7 @@ export default function TransferTableClient({
         startTransition(async () => {
             const res = await updateTransferStatusAction(movementId, newStatus);
             if (!res.success) {
-                alert(res.error || 'Failed to update status');
+                alert(res.error || 'Failed to update transfer status.');
             }
         });
     };
@@ -58,7 +58,7 @@ export default function TransferTableClient({
             <div className="flex flex-col md:flex-row justify-between gap-4">
                 <input
                     type="text"
-                    placeholder="Search product or SKU..."
+                    placeholder="Search by product name or SKU..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 w-full md:w-64"
@@ -125,10 +125,12 @@ export default function TransferTableClient({
                                 </td>
                                 <td className="py-3 px-4 font-medium text-white">
                                     {item.product.name}
-                                    <span className="block font-mono text-[10px] text-indigo-400">{item.product.sku}</span>
+                                    <span className="block font-mono text-[10px] text-indigo-400">
+                      {item.product.sku}
+                    </span>
                                 </td>
                                 <td className="py-3 px-4 font-mono text-slate-300">
-                                    {item.sourceWarehouse?.code || 'EXT'} $\rightarrow$ {item.targetWarehouse?.code || 'EXT'}
+                                    {item.sourceWarehouse?.code || 'EXT'} → {item.targetWarehouse?.code || 'EXT'}
                                 </td>
                                 <td className="py-3 px-4 text-right font-bold text-white">{item.quantity}</td>
                                 <td className="py-3 px-4 text-center">
