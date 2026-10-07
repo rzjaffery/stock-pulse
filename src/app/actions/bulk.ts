@@ -59,9 +59,9 @@ export async function bulkImportProductsAction(
             return { success: false, errors: errorList };
         }
 
-        // 2. Atomic database transaction
+        // 2. Optimized transaction with extended timeout (30 seconds)
         await db.$transaction(async (tx) => {
-            // Fetch or create default category for organization
+            // Pre-fetch Category ONCE to prevent repeated queries
             let category = await tx.category.findFirst({ where: { organizationId } });
             if (!category) {
                 category = await tx.category.create({
@@ -69,7 +69,33 @@ export async function bulkImportProductsAction(
                 });
             }
 
+            // Pre-fetch all Organization Warehouses ONCE into memory for fast lookup
+            const existingWarehouses = await tx.warehouse.findMany({
+                where: { organizationId },
+            });
+
+            if (existingWarehouses.length === 0) {
+                throw new Error('No active warehouses found. Please create at least one warehouse before importing products.');
+            }
+
+            // Build a fast lookup map (by UUID and Code uppercase)
+            const warehouseMap = new Map<string, string>();
+            existingWarehouses.forEach((w) => {
+                warehouseMap.set(w.id.toLowerCase(), w.id);
+                warehouseMap.set(w.code.toUpperCase(), w.id);
+            });
+
+            const defaultWarehouseId = existingWarehouses[0].id;
+
+            // Process products efficiently in memory
             for (const prod of validatedProducts) {
+                // Resolve target warehouse ID instantly from memory map
+                const targetWarehouseId =
+                    warehouseMap.get(prod.warehouseId.toLowerCase()) ||
+                    warehouseMap.get(prod.warehouseId.toUpperCase()) ||
+                    defaultWarehouseId;
+
+                // Create Product
                 const product = await tx.product.create({
                     data: {
                         organizationId,
@@ -86,19 +112,19 @@ export async function bulkImportProductsAction(
                     data: {
                         organizationId,
                         productId: product.id,
-                        warehouseId: prod.warehouseId,
+                        warehouseId: targetWarehouseId,
                         quantity: prod.initialQuantity,
                         minThreshold: prod.minThreshold,
                     },
                 });
 
-                // Record inbound stock movement
+                // Record inbound movement if quantity > 0
                 if (prod.initialQuantity > 0) {
                     await tx.stockMovement.create({
                         data: {
                             organizationId,
                             productId: product.id,
-                            targetWarehouseId: prod.warehouseId,
+                            targetWarehouseId: targetWarehouseId,
                             quantity: prod.initialQuantity,
                             type: 'INBOUND',
                             notes: 'Bulk CSV Initial Import',
@@ -106,6 +132,9 @@ export async function bulkImportProductsAction(
                     });
                 }
             }
+        }, {
+            maxWait: 10000, // Maximum time to wait to acquire transaction (10 seconds)
+            timeout: 30000, // Maximum time to complete transaction (30 seconds)
         });
 
         revalidatePath('/products');
@@ -160,7 +189,7 @@ export async function bulkImportWarehousesAction(
             return { success: false, errors: errorList };
         }
 
-        // 2. Batch insert warehouses
+        // 2. Batch insert warehouses using createMany (Fast & Single Network Hop)
         await db.warehouse.createMany({
             data: validatedWarehouses.map((wh) => ({
                 ...wh,

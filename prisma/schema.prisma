@@ -22,6 +22,13 @@ enum MovementType {
   ADJUSTMENT
 }
 
+enum TransferStatus {
+  PENDING
+  IN_TRANSIT
+  COMPLETED
+  CANCELLED
+}
+
 model Organization {
   id         String   @id @default(uuid())
   clerkOrgId String   @unique // Clerk Organization ID mapping
@@ -125,7 +132,7 @@ model StockLevel {
 }
 
 model StockMovement {
-  id                String       @id @default(uuid())
+  id                String         @id @default(uuid())
   organizationId    String
   productId         String
   sourceWarehouseId String?
@@ -133,14 +140,15 @@ model StockMovement {
   userId            String?
   quantity          Int
   type              MovementType
+  status            TransferStatus @default(COMPLETED)
   notes             String?
-  createdAt         DateTime     @default(now())
+  createdAt         DateTime       @default(now())
 
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   product         Product      @relation(fields: [productId], references: [id])
   sourceWarehouse Warehouse?   @relation("SourceWarehouse", fields: [sourceWarehouseId], references: [id])
   targetWarehouse Warehouse?   @relation("TargetWarehouse", fields: [targetWarehouseId], references: [id])
-  user            User?        @relation(fields: [userId], references: [id]) // Fixed: Made user optional (User?)
+  user            User?        @relation(fields: [userId], references: [id])
 
   @@index([organizationId])
 }
