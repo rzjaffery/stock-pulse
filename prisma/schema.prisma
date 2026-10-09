@@ -37,6 +37,38 @@ enum POStatus {
   CANCELLED
 }
 
+enum AuditAction {
+  PRODUCT_CREATED
+  PRODUCT_UPDATED
+  STOCK_ADJUSTED
+  BULK_IMPORTED
+  TRANSFER_DISPATCHED
+  TRANSFER_COMPLETED
+  TRANSFER_CANCELLED
+  PO_ISSUED
+  PO_RECEIVED
+  WAREHOUSE_CREATED
+}
+
+model AuditLog {
+  id             String      @id @default(uuid())
+  organizationId String
+  userId         String?
+  action         AuditAction
+  entity         String // e.g. "Product", "StockLevel", "Transfer"
+  entityId       String?
+  details        String // Human-readable summary
+  metadata       Json? // JSON diff payload (e.g. { previousQty: 10, newQty: 50 })
+  createdAt      DateTime    @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([action])
+  @@index([createdAt])
+}
+
 model Supplier {
   id             String   @id @default(uuid())
   organizationId String
@@ -210,22 +242,6 @@ model StockMovement {
   sourceWarehouse Warehouse?   @relation("SourceWarehouse", fields: [sourceWarehouseId], references: [id])
   targetWarehouse Warehouse?   @relation("TargetWarehouse", fields: [targetWarehouseId], references: [id])
   user            User?        @relation(fields: [userId], references: [id])
-
-  @@index([organizationId])
-}
-
-model AuditLog {
-  id             String   @id @default(uuid())
-  organizationId String
-  userId         String
-  action         String
-  entity         String
-  entityId       String
-  metadata       Json?
-  createdAt      DateTime @default(now())
-
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id])
 
   @@index([organizationId])
 }

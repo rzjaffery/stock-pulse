@@ -5,6 +5,8 @@ import { db } from '@/lib/db';
 import { getTenantContext } from '@/lib/tenant';
 import { revalidatePath } from 'next/cache';
 import { TransferSchema } from '@/lib/schema';
+import { logAuditActivity } from "@/lib/audit";
+import { TransferStatus } from '@prisma/client';
 
 export type CreateTransferInput = {
     productId: string;
@@ -18,7 +20,7 @@ export type CreateTransferInput = {
 
 export async function createTransferOrderAction(input: CreateTransferInput) {
     try {
-        const { organizationId } = await getTenantContext();
+        const { organizationId, userId } = await getTenantContext();
 
         // 1. Zod Validation
         const parsed = TransferSchema.safeParse({
@@ -26,20 +28,20 @@ export async function createTransferOrderAction(input: CreateTransferInput) {
             sourceWarehouseId: input.sourceWarehouseId,
             targetWarehouseId: input.targetWarehouseId,
             quantity: Number(input.quantity),
-            userId: input.userId || 'system',
+            userId: input.userId || userId || 'system',
             notes: input.notes || '',
         });
 
         if (!parsed.success) {
             const fieldErrors = parsed.error.flatten().fieldErrors;
             const errorMessage = Object.entries(fieldErrors)
-                .map(([k, v]) => `${k}: ${v?.join(', ')}`)
+                .map(([k, v]) => `${k}: ${(v as string[] | undefined)?.join(', ')}`)
                 .join(' | ');
             return { success: false, error: errorMessage };
         }
 
         const { productId, sourceWarehouseId, targetWarehouseId, quantity, notes } = parsed.data;
-        const initialStatus = input.status || 'IN_TRANSIT';
+        const initialStatus = (input.status || 'IN_TRANSIT') as TransferStatus;
 
         // 2. Execute Transaction
         await db.$transaction(async (tx) => {
@@ -82,8 +84,8 @@ export async function createTransferOrderAction(input: CreateTransferInput) {
                 }
             }
 
-            // Record Transfer Order Movement
-            await tx.stockMovement.create({
+            // Record Transfer Order Movement first
+            const movement = await tx.stockMovement.create({
                 data: {
                     organizationId,
                     productId,
@@ -91,15 +93,51 @@ export async function createTransferOrderAction(input: CreateTransferInput) {
                     targetWarehouseId,
                     quantity,
                     type: 'TRANSFER',
-                    status: initialStatus as never,
+                    status: initialStatus,
                     notes: notes || 'Inter-Warehouse Transfer Order',
                 },
             });
+
+            // Audit Trail Logging
+            if (initialStatus === 'COMPLETED') {
+                await logAuditActivity({
+                    tx,
+                    organizationId,
+                    userId,
+                    action: 'TRANSFER_COMPLETED',
+                    entity: 'StockMovement',
+                    entityId: movement.id,
+                    details: `Transfer order #${movement.id.slice(-6)} dispatches and completed immediately.`,
+                    metadata: {
+                        productId: movement.productId,
+                        quantity: movement.quantity,
+                        sourceWarehouseId: movement.sourceWarehouseId,
+                        targetWarehouseId: movement.targetWarehouseId,
+                    },
+                });
+            } else {
+                await logAuditActivity({
+                    tx,
+                    organizationId,
+                    userId,
+                    action: 'TRANSFER_DISPATCHED',
+                    entity: 'StockMovement',
+                    entityId: movement.id,
+                    details: `Transfer order #${movement.id.slice(-6)} dispatched in transit.`,
+                    metadata: {
+                        productId: movement.productId,
+                        quantity: movement.quantity,
+                        sourceWarehouseId: movement.sourceWarehouseId,
+                        targetWarehouseId: movement.targetWarehouseId,
+                    },
+                });
+            }
         });
 
         revalidatePath('/transfers');
         revalidatePath('/analytics');
         revalidatePath('/products');
+        revalidatePath('/audit');
         revalidatePath('/');
 
         return { success: true };
@@ -111,7 +149,7 @@ export async function createTransferOrderAction(input: CreateTransferInput) {
 
 export async function updateTransferStatusAction(movementId: string, newStatus: 'COMPLETED' | 'CANCELLED') {
     try {
-        const { organizationId } = await getTenantContext();
+        const { organizationId, userId } = await getTenantContext();
 
         await db.$transaction(async (tx) => {
             const movement = await tx.stockMovement.findFirst({
@@ -148,6 +186,23 @@ export async function updateTransferStatusAction(movementId: string, newStatus: 
                         },
                     });
                 }
+
+                // Record Audit Trail
+                await logAuditActivity({
+                    tx,
+                    organizationId,
+                    userId,
+                    action: 'TRANSFER_COMPLETED',
+                    entity: 'StockMovement',
+                    entityId: movementId,
+                    details: `Transfer order #${movementId.slice(-6)} received at destination facility.`,
+                    metadata: {
+                        productId: movement.productId,
+                        quantity: movement.quantity,
+                        sourceWarehouseId: movement.sourceWarehouseId,
+                        targetWarehouseId: movement.targetWarehouseId,
+                    },
+                });
             } else if (newStatus === 'CANCELLED' && movement.sourceWarehouseId) {
                 // Return quantity back to source warehouse if cancelled
                 const sourceStock = await tx.stockLevel.findFirst({
@@ -160,18 +215,35 @@ export async function updateTransferStatusAction(movementId: string, newStatus: 
                         data: { quantity: { increment: movement.quantity } },
                     });
                 }
+
+                // Record Audit Trail
+                await logAuditActivity({
+                    tx,
+                    organizationId,
+                    userId,
+                    action: 'TRANSFER_CANCELLED',
+                    entity: 'StockMovement',
+                    entityId: movementId,
+                    details: `Transfer order #${movementId.slice(-6)} was cancelled and stock returned to source warehouse.`,
+                    metadata: {
+                        productId: movement.productId,
+                        quantity: movement.quantity,
+                        sourceWarehouseId: movement.sourceWarehouseId,
+                    },
+                });
             }
 
             // Update order status
             await tx.stockMovement.update({
                 where: { id: movementId },
-                data: { status: newStatus as any },
+                data: { status: newStatus as TransferStatus },
             });
         });
 
         revalidatePath('/transfers');
         revalidatePath('/analytics');
         revalidatePath('/products');
+        revalidatePath('/audit');
         revalidatePath('/');
 
         return { success: true };
