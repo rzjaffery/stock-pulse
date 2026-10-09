@@ -38,3 +38,33 @@ export const TransferSchema = z.object({
     message: 'Source and Target warehouses must be different',
     path: ['targetWarehouseId'],
 });
+
+export const SupplierSchema = z.object({
+    name: z.string().min(2, 'Supplier name is required'),
+    email: z.string().email('Invalid email address'),
+    phone: z
+        .string()
+        .transform((val) => (val === '' ? undefined : val))
+        .optional(),
+    address: z
+        .string()
+        .transform((val) => (val === '' ? undefined : val))
+        .optional(),
+});
+
+export const PurchaseOrderSchema = z.object({
+    supplierId: z.string().min(1, 'Please select a supplier'),
+    warehouseId: z.string().min(1, 'Please select a destination warehouse'),
+    productId: z.string().min(1, 'Please select a product'),
+    quantityOrdered: z.coerce
+        .number()
+        .int('Quantity must be an integer')
+        .positive('Quantity must be greater than 0'),
+    unitCost: z.coerce
+        .number()
+        .positive('Unit cost must be greater than 0'),
+    notes: z
+        .string()
+        .transform((val) => (val === '' ? undefined : val))
+        .optional(),
+});

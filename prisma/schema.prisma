@@ -29,6 +29,63 @@ enum TransferStatus {
   CANCELLED
 }
 
+enum POStatus {
+  DRAFT
+  ISSUED
+  PARTIALLY_RECEIVED
+  RECEIVED
+  CANCELLED
+}
+
+model Supplier {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  email          String
+  phone          String?
+  address        String?
+  createdAt      DateTime @default(now())
+
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  purchaseOrders PurchaseOrder[]
+
+  @@unique([organizationId, email])
+  @@index([organizationId])
+}
+
+model PurchaseOrder {
+  id             String   @id @default(uuid())
+  organizationId String
+  supplierId     String
+  warehouseId    String
+  poNumber       String
+  status         POStatus @default(DRAFT)
+  totalCost      Float    @default(0)
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  supplier     Supplier            @relation(fields: [supplierId], references: [id])
+  warehouse    Warehouse           @relation(fields: [warehouseId], references: [id])
+  items        PurchaseOrderItem[]
+
+  @@unique([organizationId, poNumber])
+  @@index([organizationId])
+}
+
+model PurchaseOrderItem {
+  id               String @id @default(uuid())
+  purchaseOrderId  String
+  productId        String
+  quantityOrdered  Int
+  quantityReceived Int    @default(0)
+  unitCost         Float
+
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+  product       Product       @relation(fields: [productId], references: [id])
+}
+
 model Organization {
   id         String   @id @default(uuid())
   clerkOrgId String   @unique // Clerk Organization ID mapping
@@ -44,6 +101,8 @@ model Organization {
   stockLevels    StockLevel[]
   stockMovements StockMovement[]
   auditLogs      AuditLog[]
+  suppliers      Supplier[]
+  purchaseOrders PurchaseOrder[]
 
   @@index([clerkOrgId])
 }
@@ -89,10 +148,11 @@ model Product {
   unitPrice      Float
   createdAt      DateTime @default(now())
 
-  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  category     Category?       @relation(fields: [categoryId], references: [id])
-  stockLevels  StockLevel[]
-  movements    StockMovement[]
+  organization       Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  category           Category?           @relation(fields: [categoryId], references: [id])
+  stockLevels        StockLevel[]
+  movements          StockMovement[]
+  purchaseOrderItems PurchaseOrderItem[]
 
   @@unique([organizationId, sku])
   @@index([organizationId])
@@ -109,6 +169,7 @@ model Warehouse {
   stockLevels     StockLevel[]
   sourceMovements StockMovement[] @relation("SourceWarehouse")
   targetMovements StockMovement[] @relation("TargetWarehouse")
+  purchaseOrders  PurchaseOrder[]
 
   @@unique([organizationId, code])
   @@index([organizationId])
