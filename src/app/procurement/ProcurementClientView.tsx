@@ -94,16 +94,14 @@ export default function ProcurementClientView({
     });
 
     const handleOpenPoModal = (item?: LowStockItem) => {
-        if (item) {
-            const deficit = Math.max(item.minThreshold * 2 - item.quantity, 10);
-            setPoForm((prev) => ({
-                ...prev,
-                productId: item.product.id,
-                warehouseId: item.warehouse.id,
-                quantityOrdered: deficit,
-                unitCost: item.product.unitPrice,
-            }));
-        }
+        setPoForm({
+            supplierId: suppliers[0]?.id || '',
+            warehouseId: item ? item.warehouse.id : (warehouses[0]?.id || ''),
+            productId: item ? item.product.id : (products[0]?.id || ''),
+            quantityOrdered: item ? Math.max(item.minThreshold * 2 - item.quantity, 10) : 50,
+            unitCost: item ? item.product.unitPrice : 10,
+            notes: item ? `Reorder for ${item.product.name}` : '',
+        });
         setIsPoModalOpen(true);
     };
 
@@ -413,12 +411,16 @@ export default function ProcurementClientView({
                                 </label>
                                 <select
                                     value={poForm.supplierId}
-                                    onChange={(e) => setPoForm({ ...poForm, supplierId: e.target.value })}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100"
+                                    onChange={(e) => {
+                                        const selectedId = e.target.value;
+                                        setPoForm((prev) => ({ ...prev, supplierId: selectedId }));
+                                    }}
+                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:outline-none focus:border-indigo-500"
                                 >
+                                    <option value="" disabled>-- Select a Supplier --</option>
                                     {suppliers.map((s) => (
                                         <option key={s.id} value={s.id}>
-                                            {s.name}
+                                            {s.name} ({s.email})
                                         </option>
                                     ))}
                                 </select>
