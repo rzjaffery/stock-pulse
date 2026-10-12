@@ -4,6 +4,7 @@
 import { db } from '@/lib/db';
 import { getTenantContext } from '@/lib/tenant';
 import { revalidatePath } from 'next/cache';
+import { AuditAction } from '@prisma/client';
 
 export type CreateProductParams = {
     name: string;
@@ -17,7 +18,7 @@ export type CreateProductParams = {
 
 export async function createProductAction(params: CreateProductParams) {
     try {
-        const { organizationId } = await getTenantContext();
+        const { userId, organizationId } = await getTenantContext();
         const { name, sku, description, unitPrice, initialQuantity, minThreshold } = params;
         let { warehouseId } = params;
 
@@ -25,7 +26,7 @@ export async function createProductAction(params: CreateProductParams) {
             return { success: false, error: 'Please provide valid values for all required fields.' };
         }
 
-        // Execute atomic creation of Product + Initial Stock Level
+        // Execute atomic creation of Product + Initial Stock Level + Audit Log
         await db.$transaction(async (tx) => {
             // 1. Ensure at least one Warehouse exists for this organization
             if (!warehouseId) {
@@ -63,7 +64,7 @@ export async function createProductAction(params: CreateProductParams) {
                 },
             });
 
-            // 4. Set Initial Stock Level in the target warehouse
+            // 4. Set Initial Stock Level in target warehouse
             await tx.stockLevel.create({
                 data: {
                     organizationId,
@@ -85,14 +86,28 @@ export async function createProductAction(params: CreateProductParams) {
                     notes: 'Initial stock setup upon product creation',
                 },
             });
+
+            // 6. Log Audit Trail using enum AuditAction
+            await tx.auditLog.create({
+                data: {
+                    organizationId,
+                    userId,
+                    action: AuditAction.PRODUCT_CREATED,
+                    entity: 'Product',
+                    entityId: product.id,
+                    details: `Created product ${name} (${sku}) with initial stock of ${initialQuantity}`,
+                },
+            });
         });
 
         revalidatePath('/');
+        revalidatePath('/products');
         return { success: true };
-    } catch (error:any) {
-        if (error.code === 'P2002') {
+    } catch (error: unknown) {
+        const err = error as { code?: string; message?: string };
+        if (err.code === 'P2002') {
             return { success: false, error: 'A product with this SKU already exists.' };
         }
-        return { success: false, error: error?.message || 'Failed to create product.' };
+        return { success: false, error: err.message || 'Failed to create product.' };
     }
 }

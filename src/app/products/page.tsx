@@ -10,24 +10,23 @@ export const revalidate = 0;
 export default async function ProductsPage() {
     const { organizationId } = await getTenantContext();
 
-    const [products, warehouses] = await Promise.all([
-        db.product.findMany({
-            where: { organizationId },
-            include: {
-                category: { select: { name: true } },
-                stockLevels: {
-                    include: {
-                        warehouse: { select: { name: true, code: true } },
-                    },
+    const warehouses = await db.warehouse.findMany({
+        where: { organizationId },
+        select: { id: true, name: true, code: true },
+    });
+
+    const products = await db.product.findMany({
+        where: { organizationId },
+        include: {
+            category: true,
+            stockLevels: {
+                include: {
+                    warehouse: true,
                 },
             },
-            orderBy: { createdAt: 'desc' },
-        }),
-        db.warehouse.findMany({
-            where: { organizationId },
-            select: { id: true, name: true, code: true },
-        }),
-    ]);
+        },
+        orderBy: { createdAt: 'desc' },
+    });
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans flex">
@@ -35,7 +34,7 @@ export default async function ProductsPage() {
 
             <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
                 <ProductsClientView
-                    initialProducts={products as any}
+                    initialProducts={products}
                     warehouses={warehouses}
                 />
             </div>
