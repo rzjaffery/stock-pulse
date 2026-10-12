@@ -10,7 +10,7 @@ export async function getTenantContext() {
 
     const userId = (session.user as any).id;
     const organizationId = (session.user as any).organizationId;
-    const role = (session.user as any).role || 'OPERATOR';
+    const role = (session.user as any).role || 'OPERATOR'; // Defaults to OPERATOR if missing
 
     return { userId, organizationId, role };
 }

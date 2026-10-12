@@ -13,21 +13,19 @@ export type CreateMemberParams = {
     password: string;
     role: Role;
 };
+
 export async function updateUserRoleAction(targetUserId: string, newRole: Role) {
     try {
-        const { userId, organizationId, role } = await getTenantContext();
+        const { userId, organizationId, role: adminRole } = await getTenantContext();
 
-        // 1. Enforce that only ADMINs can change roles
-        if (role !== 'ADMIN') {
+        if (adminRole !== 'ADMIN') {
             return { success: false, error: 'Unauthorized: Only Administrators can modify user roles.' };
         }
 
-        // 2. Prevent an admin from changing their own role
         if (userId === targetUserId) {
             return { success: false, error: 'You cannot modify your own administrative role.' };
         }
 
-        // 3. Verify target user belongs to the same organization
         const targetUser = await db.user.findFirst({
             where: { id: targetUserId, organizationId },
         });
@@ -36,7 +34,6 @@ export async function updateUserRoleAction(targetUserId: string, newRole: Role) 
             return { success: false, error: 'Target user not found in your organization.' };
         }
 
-        // 4. Update the role
         await db.user.update({
             where: { id: targetUserId },
             data: { role: newRole },
@@ -52,20 +49,19 @@ export async function updateUserRoleAction(targetUserId: string, newRole: Role) 
 
 export async function createTeamMemberAction(params: CreateMemberParams) {
     try {
+        // Explicitly rename role to adminRole to prevent variable shadowing
         const { organizationId, role: adminRole } = await getTenantContext();
 
-        // 1. Enforce that only ADMINs can add new team members
         if (adminRole !== 'ADMIN') {
             return { success: false, error: 'Unauthorized: Only Administrators can add new team members.' };
         }
 
-        const { name, email, password, role } = params;
+        const { name, email, password, role: memberRole } = params;
 
-        if (!name || !email || !password || !role) {
+        if (!name || !email || !password || !memberRole) {
             return { success: false, error: 'Please provide all required fields.' };
         }
 
-        // 2. Check if user already exists
         const existingUser = await db.user.findUnique({
             where: { email },
         });
@@ -74,16 +70,14 @@ export async function createTeamMemberAction(params: CreateMemberParams) {
             return { success: false, error: 'A user with this email address already exists.' };
         }
 
-        // 3. Hash the password securely
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 4. Create user inside the admin's organization
         await db.user.create({
             data: {
                 name,
                 email,
                 password: hashedPassword,
-                role,
+                role: memberRole,
                 organizationId,
             },
         });
