@@ -1,13 +1,22 @@
 // src/app/layout.tsx
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Libre_Caslon_Condensed, Inter } from 'next/font/google';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const libreCaslon = Libre_Caslon_Condensed({
+    subsets: ['latin'],
+    weight: ['400', '700'],
+    variable: '--font-libre-caslon',
+});
+
+const inter = Inter({
+    subsets: ['latin'],
+    variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
-    title: 'StockPulse | Royal Emerald Logistics',
-    description: 'Enterprise Inventory Management System',
+    title: 'StockPulse | Enterprise Logistics',
+    description: 'Royal Emerald Light Theme Inventory System',
 };
 
 export default function RootLayout({
@@ -16,8 +25,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className="dark">
-        <body className={`${inter.className} bg-[#020805] text-slate-100 antialiased`}>
+        <html lang="en" className={`${libreCaslon.variable} ${inter.variable}`}>
+        <body className="bg-slate-50 text-slate-900 antialiased font-sans">
         {children}
         </body>
         </html>
