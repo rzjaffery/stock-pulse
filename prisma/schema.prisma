@@ -119,42 +119,36 @@ model PurchaseOrderItem {
 }
 
 model Organization {
-  id         String   @id @default(uuid())
-  clerkOrgId String   @unique // Clerk Organization ID mapping
-  name       String
-  slug       String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   users          User[]
   warehouses     Warehouse[]
-  categories     Category[]
   products       Product[]
-  stockLevels    StockLevel[]
   stockMovements StockMovement[]
-  auditLogs      AuditLog[]
-  suppliers      Supplier[]
   purchaseOrders PurchaseOrder[]
-
-  @@index([clerkOrgId])
+  suppliers      Supplier[]
+  auditLogs      AuditLog[]
+  categories     Category[]
+  stockLevels    StockLevel[]
 }
 
 model User {
   id             String   @id @default(uuid())
-  clerkUserId    String   @unique
   organizationId String
   email          String   @unique
   name           String?
-  role           Role     @default(OPERATOR)
+  password       String // Hashed password for credentials auth
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  movements    StockMovement[]
-  auditLogs    AuditLog[]
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  auditLogs      AuditLog[]
+  stockMovements StockMovement[]
 
   @@index([organizationId])
-  @@index([clerkUserId])
 }
 
 model Category {
