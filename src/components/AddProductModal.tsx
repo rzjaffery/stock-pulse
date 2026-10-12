@@ -84,7 +84,7 @@ export default function AddProductModal({ isOpen: externalIsOpen, onClose, wareh
             {externalIsOpen === undefined && (
                 <button
                     onClick={() => setInternalIsOpen(true)}
-                    className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 transition shadow-sm"
+                    className="px-4 py-2 text-sm font-semibold text-slate-900 bg-emerald-700 rounded-lg hover:bg-emerald-800 transition shadow-sm text-white"
                 >
                     + Add New Product
                 </button>
@@ -92,75 +92,75 @@ export default function AddProductModal({ isOpen: externalIsOpen, onClose, wareh
 
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-emerald-900 border border-emerald-800 rounded-xl w-full max-w-md p-6 text-emerald-100 shadow-2xl">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-md p-6 text-slate-700 shadow-2xl">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-bold">Add New Product to Catalog</h3>
-                            <button onClick={handleClose} className="text-emerald-400 hover:text-emerald-200">
+                            <button onClick={handleClose} className="text-emerald-700 hover:text-slate-700">
                                 ✕
                             </button>
                         </div>
 
                         {error && (
-                            <div className="mb-4 p-3 bg-red-950/80 border border-red-800 text-red-200 rounded text-sm">
+                            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
                                 {error}
                             </div>
                         )}
 
                         {success && (
-                            <div className="mb-4 p-3 bg-emerald-950/80 border border-emerald-800 text-emerald-200 rounded text-sm">
+                            <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded text-sm">
                                 Product created and stock allocated!
                             </div>
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-3">
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Product Name</label>
+                                <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">Product Name</label>
                                 <input
                                     type="text"
                                     required
                                     placeholder="e.g. Wireless Ergonomic Mouse"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">SKU Code</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">SKU Code</label>
                                     <input
                                         type="text"
                                         required
                                         placeholder="ELEC-MSE-01"
                                         value={formData.sku}
                                         onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Unit Price ($)</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">Unit Price ($)</label>
                                     <input
                                         type="number"
                                         step="0.01"
                                         required
                                         value={formData.unitPrice}
                                         onChange={(e) => setFormData({ ...formData, unitPrice: Number(e.target.value) })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Target Warehouse</label>
+                                <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">Target Warehouse</label>
                                 {warehouses.length === 0 ? (
-                                    <div className="bg-emerald-800 border border-emerald-700 rounded-lg p-2.5 text-xs text-amber-400">
+                                    <div className="bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-amber-700">
                                         ⚠️ No warehouse found. A <strong>&#34;Main Distribution Hub&#34;</strong> will be created automatically.
                                     </div>
                                 ) : (
                                     <select
                                         value={formData.warehouseId}
                                         onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     >
                                         {warehouses.map((w) => (
                                             <option key={w.id} value={w.id}>
@@ -173,39 +173,39 @@ export default function AddProductModal({ isOpen: externalIsOpen, onClose, wareh
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Initial Qty</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">Initial Qty</label>
                                     <input
                                         type="number"
                                         min="0"
                                         value={formData.initialQuantity}
                                         onChange={(e) => setFormData({ ...formData, initialQuantity: Number(e.target.value) })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Min Threshold</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">Min Threshold</label>
                                     <input
                                         type="number"
                                         min="1"
                                         value={formData.minThreshold}
                                         onChange={(e) => setFormData({ ...formData, minThreshold: Number(e.target.value) })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-3 border-t border-emerald-800">
+                            <div className="flex justify-end gap-3 pt-3 border-t border-slate-200">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="px-4 py-2 text-sm text-emerald-400 hover:text-emerald-200"
+                                    className="px-4 py-2 text-sm text-emerald-700 hover:text-slate-700"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isPending}
-                                    className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 disabled:opacity-50"
+                                    className="px-4 py-2 text-sm font-semibold text-slate-900 bg-emerald-700 rounded-lg hover:bg-emerald-800 disabled:opacity-50 text-white"
                                 >
                                     {isPending ? 'Saving...' : 'Create Product'}
                                 </button>

@@ -76,53 +76,53 @@ export default function BulkUploadModal({
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-            <div className="bg-emerald-900 border border-emerald-800 rounded-xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
-                <div className="flex justify-between items-center border-b border-emerald-800 pb-4">
-                    <h2 className="text-lg font-bold text-white">{title}</h2>
-                    <button onClick={onClose} className="text-emerald-400 hover:text-white text-sm">✕</button>
+            <div className="bg-white border border-slate-200 rounded-xl max-w-lg w-full p-6 space-y-6 shadow-2xl">
+                <div className="flex justify-between items-center border-b border-slate-200 pb-4">
+                    <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+                    <button onClick={onClose} className="text-emerald-700 hover:text-slate-900 text-sm">✕</button>
                 </div>
 
-                <div className="space-y-4 text-xs text-emerald-300">
+                <div className="space-y-4 text-xs text-slate-600">
                     <p>Upload a <strong>CSV file</strong> matching the template headers. Click below to download a reference sample.</p>
                     <button
                         type="button"
                         onClick={handleDownloadTemplate}
-                        className="px-3 py-1.5 bg-emerald-800 hover:bg-emerald-700 text-emerald-400 font-semibold rounded border border-emerald-500/20"
+                        className="px-3 py-1.5 bg-slate-50 hover:bg-emerald-800 text-emerald-700 font-semibold rounded border border-emerald-200"
                     >
                         📥 Download Sample CSV Template
                     </button>
                 </div>
 
                 <div className="space-y-2">
-                    <label className="block text-xs font-semibold text-emerald-400">Select File (.csv)</label>
+                    <label className="block text-xs font-semibold text-emerald-700">Select File (.csv)</label>
                     <input
                         type="file"
                         accept=".csv"
                         onChange={handleFileChange}
-                        className="w-full text-xs text-emerald-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500"
+                        className="w-full text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-700 file:text-white hover:file:bg-emerald-500"
                     />
                 </div>
 
                 {errorLogs.length > 0 && (
-                    <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg max-h-36 overflow-y-auto space-y-1">
-                        <p className="text-xs font-bold text-red-400">Import Failed ({errorLogs.length} errors):</p>
+                    <div className="p-3 bg-red-500/10 border border-red-200 rounded-lg max-h-36 overflow-y-auto space-y-1">
+                        <p className="text-xs font-bold text-red-700">Import Failed ({errorLogs.length} errors):</p>
                         {errorLogs.map((err, idx) => (
-                            <p key={idx} className="text-[11px] text-red-300 font-mono">• {err}</p>
+                            <p key={idx} className="text-[11px] text-red-700 font-mono">• {err}</p>
                         ))}
                     </div>
                 )}
 
-                <div className="flex justify-end gap-3 pt-4 border-t border-emerald-800">
+                <div className="flex justify-end gap-3 pt-4 border-t border-slate-200">
                     <button
                         onClick={onClose}
-                        className="px-4 py-2 text-xs font-semibold bg-emerald-800 text-emerald-300 rounded-lg hover:bg-emerald-700"
+                        className="px-4 py-2 text-xs font-semibold bg-slate-50 text-slate-600 rounded-lg hover:bg-emerald-800"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={!file || isUploading}
-                        className="px-4 py-2 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg disabled:opacity-50"
+                        className="px-4 py-2 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg disabled:opacity-50"
                     >
                         {isUploading ? 'Processing...' : 'Upload & Execute Import'}
                     </button>

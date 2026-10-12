@@ -53,7 +53,7 @@ export default function TransferTableClient({
     });
 
     return (
-        <div className="bg-emerald-900 border border-emerald-800 rounded-xl p-6 space-y-4">
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-4">
             {/* Search & Multi-Filter Controls */}
             <div className="flex flex-col md:flex-row justify-between gap-4">
                 <input
@@ -61,14 +61,14 @@ export default function TransferTableClient({
                     placeholder="Search by product name or SKU..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-2 text-xs text-emerald-200 placeholder-emerald-500 focus:outline-none focus:border-emerald-500 w-full md:w-64"
+                    className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 w-full md:w-64"
                 />
 
                 <div className="flex flex-wrap items-center gap-3">
                     <select
                         value={selectedStatus}
                         onChange={(e) => setSelectedStatus(e.target.value)}
-                        className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-2 text-xs text-emerald-200 focus:outline-none focus:border-emerald-500"
+                        className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-emerald-600"
                     >
                         <option value="ALL">All Statuses</option>
                         <option value="IN_TRANSIT">In Transit</option>
@@ -80,7 +80,7 @@ export default function TransferTableClient({
                     <select
                         value={selectedWarehouse}
                         onChange={(e) => setSelectedWarehouse(e.target.value)}
-                        className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-2 text-xs text-emerald-200 focus:outline-none focus:border-emerald-500"
+                        className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-emerald-600"
                     >
                         <option value="ALL">All Facilities</option>
                         {warehouses.map((wh) => (
@@ -94,8 +94,8 @@ export default function TransferTableClient({
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-emerald-300">
-                    <thead className="bg-emerald-950 text-emerald-400 uppercase font-semibold border-b border-emerald-800">
+                <table className="w-full text-left text-xs text-slate-600">
+                    <thead className="bg-slate-50 text-emerald-700 uppercase font-semibold border-b border-slate-200">
                     <tr>
                         <th className="py-3 px-4">Date</th>
                         <th className="py-3 px-4">Product</th>
@@ -105,17 +105,17 @@ export default function TransferTableClient({
                         <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                     </thead>
-                    <tbody className="divide-y divide-emerald-800/60">
+                    <tbody className="divide-y divide-slate-200">
                     {filteredTransfers.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="text-center py-8 text-emerald-500">
+                            <td colSpan={6} className="text-center py-8 text-emerald-700">
                                 No transfer orders found matching selected filters.
                             </td>
                         </tr>
                     ) : (
                         filteredTransfers.map((item) => (
-                            <tr key={item.id} className="hover:bg-emerald-800/40">
-                                <td className="py-3 px-4 text-emerald-400">
+                            <tr key={item.id} className="hover:bg-slate-50/40">
+                                <td className="py-3 px-4 text-emerald-700">
                                     {new Date(item.createdAt).toLocaleDateString(undefined, {
                                         month: 'short',
                                         day: 'numeric',
@@ -123,24 +123,24 @@ export default function TransferTableClient({
                                         minute: '2-digit',
                                     })}
                                 </td>
-                                <td className="py-3 px-4 font-medium text-white">
+                                <td className="py-3 px-4 font-medium text-slate-900">
                                     {item.product.name}
-                                    <span className="block font-mono text-[10px] text-emerald-400">
+                                    <span className="block font-mono text-[10px] text-emerald-700">
                       {item.product.sku}
                     </span>
                                 </td>
-                                <td className="py-3 px-4 font-mono text-emerald-300">
+                                <td className="py-3 px-4 font-mono text-slate-600">
                                     {item.sourceWarehouse?.code || 'EXT'} → {item.targetWarehouse?.code || 'EXT'}
                                 </td>
-                                <td className="py-3 px-4 text-right font-bold text-white">{item.quantity}</td>
+                                <td className="py-3 px-4 text-right font-bold text-slate-900">{item.quantity}</td>
                                 <td className="py-3 px-4 text-center">
                     <span
                         className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
                             item.status === 'COMPLETED'
-                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                 : item.status === 'IN_TRANSIT' || item.status === 'PENDING'
-                                    ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                                    : 'bg-emerald-800 text-emerald-400 border border-emerald-700'
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-500/20'
+                                    : 'bg-slate-50 text-emerald-700 border border-slate-300'
                         }`}
                     >
                       {item.status}
@@ -152,14 +152,14 @@ export default function TransferTableClient({
                                             <button
                                                 disabled={isPending}
                                                 onClick={() => handleStatusUpdate(item.id, 'COMPLETED')}
-                                                className="px-2 py-1 text-[10px] font-semibold bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600 hover:text-white rounded border border-emerald-500/30"
+                                                className="px-2 py-1 text-[10px] font-semibold bg-emerald-50 text-slate-600 hover:bg-emerald-700 hover:text-white rounded border border-emerald-200"
                                             >
                                                 Mark Received
                                             </button>
                                             <button
                                                 disabled={isPending}
                                                 onClick={() => handleStatusUpdate(item.id, 'CANCELLED')}
-                                                className="px-2 py-1 text-[10px] font-semibold bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white rounded border border-red-500/30"
+                                                className="px-2 py-1 text-[10px] font-semibold bg-red-50 text-red-700 hover:bg-red-600 hover:text-slate-900 rounded border border-red-200"
                                             >
                                                 Cancel
                                             </button>

@@ -42,16 +42,16 @@ export default async function ProcurementPage() {
     ]);
 
     return (
-        <div className="min-h-screen bg-emerald-950 text-emerald-100 font-sans flex">
+        <div className="min-h-screen bg-slate-50 text-slate-700 font-sans flex">
             <Sidebar />
 
             <div className="flex-1 lg:pl-64 flex flex-col min-w-0">
-                <header className="sticky top-0 z-20 bg-emerald-950/80 backdrop-blur-md border-b border-emerald-800 px-6 py-4 flex justify-between items-center">
+                <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center">
                     <div>
-            <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
+            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded">
               Procurement
             </span>
-                        <h1 className="text-xl font-bold text-white tracking-tight mt-1">
+                        <h1 className="text-xl font-bold text-slate-900 tracking-tight mt-1">
                             Suppliers & Purchase Orders
                         </h1>
                     </div>

@@ -98,7 +98,7 @@ export default function TransferModal({
             ) : (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500"
+                    className="px-4 py-2 text-xs font-semibold text-slate-900 bg-emerald-700 rounded-lg hover:bg-emerald-800 text-white"
                 >
                     + New Transfer Order
                 </button>
@@ -106,35 +106,35 @@ export default function TransferModal({
 
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-                    <div className="bg-emerald-900 border border-emerald-800 rounded-xl w-full max-w-lg p-6 text-emerald-100 shadow-2xl space-y-4">
-                        <div className="flex justify-between items-center border-b border-emerald-800 pb-3">
-                            <h3 className="text-base font-bold text-white">Create Inter-Warehouse Transfer</h3>
-                            <button onClick={() => setIsOpen(false)} className="text-emerald-400 hover:text-white">
+                    <div className="bg-white border border-slate-200 rounded-xl w-full max-w-lg p-6 text-slate-700 shadow-2xl space-y-4">
+                        <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+                            <h3 className="text-base font-bold text-slate-900">Create Inter-Warehouse Transfer</h3>
+                            <button onClick={() => setIsOpen(false)} className="text-emerald-700 hover:text-slate-900">
                                 ✕
                             </button>
                         </div>
 
                         {error && (
-                            <div className="p-3 bg-red-950/80 border border-red-800 text-red-200 rounded text-xs">
+                            <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded text-xs">
                                 {error}
                             </div>
                         )}
 
                         {success && (
-                            <div className="p-3 bg-emerald-950/80 border border-emerald-800 text-emerald-200 rounded text-xs">
+                            <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded text-xs">
                                 Transfer order created and stock movements recorded!
                             </div>
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
+                                <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">
                                     Select Product
                                 </label>
                                 <select
                                     value={formData.productId}
                                     onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
-                                    className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                 >
                                     {products.map((p) => (
                                         <option key={p.id} value={p.id}>
@@ -146,13 +146,13 @@ export default function TransferModal({
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">
                                         Source Warehouse
                                     </label>
                                     <select
                                         value={formData.sourceWarehouseId}
                                         onChange={(e) => setFormData({ ...formData, sourceWarehouseId: e.target.value })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     >
                                         {warehouses.map((w) => (
                                             <option key={w.id} value={w.id}>
@@ -163,13 +163,13 @@ export default function TransferModal({
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">
                                         Destination Warehouse
                                     </label>
                                     <select
                                         value={formData.targetWarehouseId}
                                         onChange={(e) => setFormData({ ...formData, targetWarehouseId: e.target.value })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     >
                                         {warehouses.map((w) => (
                                             <option key={w.id} value={w.id}>
@@ -182,7 +182,7 @@ export default function TransferModal({
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">
                                         Quantity
                                     </label>
                                     <input
@@ -191,12 +191,12 @@ export default function TransferModal({
                                         required
                                         value={formData.quantity}
                                         onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">
                                         Initial Status
                                     </label>
                                     <select
@@ -207,7 +207,7 @@ export default function TransferModal({
                                                 status: e.target.value as 'PENDING' | 'IN_TRANSIT' | 'COMPLETED',
                                             })
                                         }
-                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                     >
                                         <option value="IN_TRANSIT">In Transit</option>
                                         <option value="PENDING">Pending</option>
@@ -217,7 +217,7 @@ export default function TransferModal({
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
+                                <label className="block text-xs font-semibold uppercase text-emerald-700 mb-1">
                                     Notes / Shipment Order Ref
                                 </label>
                                 <input
@@ -225,22 +225,22 @@ export default function TransferModal({
                                     placeholder="e.g. Expedited air freight shipment"
                                     value={formData.notes}
                                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                    className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:ring-1 focus:ring-emerald-600 outline-none"
                                 />
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-3 border-t border-emerald-800">
+                            <div className="flex justify-end gap-3 pt-3 border-t border-slate-200">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(false)}
-                                    className="px-4 py-2 text-xs text-emerald-400 hover:text-white"
+                                    className="px-4 py-2 text-xs text-emerald-700 hover:text-slate-900"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isPending}
-                                    className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 disabled:opacity-50"
+                                    className="px-4 py-2 text-xs font-semibold text-slate-900 bg-emerald-700 rounded-lg hover:bg-emerald-800 disabled:opacity-50 text-white"
                                 >
                                     {isPending ? 'Processing...' : 'Dispatch Transfer'}
                                 </button>
