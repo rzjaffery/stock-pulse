@@ -53,7 +53,7 @@ export default function TransferTableClient({
     });
 
     return (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+        <div className="bg-emerald-900 border border-emerald-800 rounded-xl p-6 space-y-4">
             {/* Search & Multi-Filter Controls */}
             <div className="flex flex-col md:flex-row justify-between gap-4">
                 <input
@@ -61,14 +61,14 @@ export default function TransferTableClient({
                     placeholder="Search by product name or SKU..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 w-full md:w-64"
+                    className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-2 text-xs text-emerald-200 placeholder-emerald-500 focus:outline-none focus:border-emerald-500 w-full md:w-64"
                 />
 
                 <div className="flex flex-wrap items-center gap-3">
                     <select
                         value={selectedStatus}
                         onChange={(e) => setSelectedStatus(e.target.value)}
-                        className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                        className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-2 text-xs text-emerald-200 focus:outline-none focus:border-emerald-500"
                     >
                         <option value="ALL">All Statuses</option>
                         <option value="IN_TRANSIT">In Transit</option>
@@ -80,7 +80,7 @@ export default function TransferTableClient({
                     <select
                         value={selectedWarehouse}
                         onChange={(e) => setSelectedWarehouse(e.target.value)}
-                        className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                        className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-2 text-xs text-emerald-200 focus:outline-none focus:border-emerald-500"
                     >
                         <option value="ALL">All Facilities</option>
                         {warehouses.map((wh) => (
@@ -94,8 +94,8 @@ export default function TransferTableClient({
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                    <thead className="bg-slate-950 text-slate-400 uppercase font-semibold border-b border-slate-800">
+                <table className="w-full text-left text-xs text-emerald-300">
+                    <thead className="bg-emerald-950 text-emerald-400 uppercase font-semibold border-b border-emerald-800">
                     <tr>
                         <th className="py-3 px-4">Date</th>
                         <th className="py-3 px-4">Product</th>
@@ -105,17 +105,17 @@ export default function TransferTableClient({
                         <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-emerald-800/60">
                     {filteredTransfers.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="text-center py-8 text-slate-500">
+                            <td colSpan={6} className="text-center py-8 text-emerald-500">
                                 No transfer orders found matching selected filters.
                             </td>
                         </tr>
                     ) : (
                         filteredTransfers.map((item) => (
-                            <tr key={item.id} className="hover:bg-slate-800/40">
-                                <td className="py-3 px-4 text-slate-400">
+                            <tr key={item.id} className="hover:bg-emerald-800/40">
+                                <td className="py-3 px-4 text-emerald-400">
                                     {new Date(item.createdAt).toLocaleDateString(undefined, {
                                         month: 'short',
                                         day: 'numeric',
@@ -125,11 +125,11 @@ export default function TransferTableClient({
                                 </td>
                                 <td className="py-3 px-4 font-medium text-white">
                                     {item.product.name}
-                                    <span className="block font-mono text-[10px] text-indigo-400">
+                                    <span className="block font-mono text-[10px] text-emerald-400">
                       {item.product.sku}
                     </span>
                                 </td>
-                                <td className="py-3 px-4 font-mono text-slate-300">
+                                <td className="py-3 px-4 font-mono text-emerald-300">
                                     {item.sourceWarehouse?.code || 'EXT'} → {item.targetWarehouse?.code || 'EXT'}
                                 </td>
                                 <td className="py-3 px-4 text-right font-bold text-white">{item.quantity}</td>
@@ -140,7 +140,7 @@ export default function TransferTableClient({
                                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                                 : item.status === 'IN_TRANSIT' || item.status === 'PENDING'
                                     ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                                    : 'bg-slate-800 text-slate-400 border border-slate-700'
+                                    : 'bg-emerald-800 text-emerald-400 border border-emerald-700'
                         }`}
                     >
                       {item.status}

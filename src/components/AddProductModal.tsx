@@ -92,10 +92,10 @@ export default function AddProductModal({ isOpen: externalIsOpen, onClose, wareh
 
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-md p-6 text-slate-100 shadow-2xl">
+                    <div className="bg-emerald-900 border border-emerald-800 rounded-xl w-full max-w-md p-6 text-emerald-100 shadow-2xl">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-lg font-bold">Add New Product to Catalog</h3>
-                            <button onClick={handleClose} className="text-slate-400 hover:text-slate-200">
+                            <button onClick={handleClose} className="text-emerald-400 hover:text-emerald-200">
                                 ✕
                             </button>
                         </div>
@@ -114,53 +114,53 @@ export default function AddProductModal({ isOpen: externalIsOpen, onClose, wareh
 
                         <form onSubmit={handleSubmit} className="space-y-3">
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Product Name</label>
+                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Product Name</label>
                                 <input
                                     type="text"
                                     required
                                     placeholder="e.g. Wireless Ergonomic Mouse"
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                    className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                 />
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">SKU Code</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">SKU Code</label>
                                     <input
                                         type="text"
                                         required
                                         placeholder="ELEC-MSE-01"
                                         value={formData.sku}
                                         onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Unit Price ($)</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Unit Price ($)</label>
                                     <input
                                         type="number"
                                         step="0.01"
                                         required
                                         value={formData.unitPrice}
                                         onChange={(e) => setFormData({ ...formData, unitPrice: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Target Warehouse</label>
+                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Target Warehouse</label>
                                 {warehouses.length === 0 ? (
-                                    <div className="bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-xs text-amber-400">
+                                    <div className="bg-emerald-800 border border-emerald-700 rounded-lg p-2.5 text-xs text-amber-400">
                                         ⚠️ No warehouse found. A <strong>&#34;Main Distribution Hub&#34;</strong> will be created automatically.
                                     </div>
                                 ) : (
                                     <select
                                         value={formData.warehouseId}
                                         onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     >
                                         {warehouses.map((w) => (
                                             <option key={w.id} value={w.id}>
@@ -173,32 +173,32 @@ export default function AddProductModal({ isOpen: externalIsOpen, onClose, wareh
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Initial Qty</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Initial Qty</label>
                                     <input
                                         type="number"
                                         min="0"
                                         value={formData.initialQuantity}
                                         onChange={(e) => setFormData({ ...formData, initialQuantity: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Min Threshold</label>
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">Min Threshold</label>
                                     <input
                                         type="number"
                                         min="1"
                                         value={formData.minThreshold}
                                         onChange={(e) => setFormData({ ...formData, minThreshold: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-sm text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-sm text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                            <div className="flex justify-end gap-3 pt-3 border-t border-emerald-800">
                                 <button
                                     type="button"
                                     onClick={handleClose}
-                                    className="px-4 py-2 text-sm text-slate-400 hover:text-slate-200"
+                                    className="px-4 py-2 text-sm text-emerald-400 hover:text-emerald-200"
                                 >
                                     Cancel
                                 </button>

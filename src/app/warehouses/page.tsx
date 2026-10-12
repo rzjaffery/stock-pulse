@@ -33,7 +33,7 @@ export default async function WarehousesPage() {
     }));
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans flex">
+        <div className="min-h-screen bg-emerald-950 text-slate-100 font-sans flex">
             <Sidebar />
 
             <div className="flex-1 lg:pl-64 flex flex-col min-w-0">

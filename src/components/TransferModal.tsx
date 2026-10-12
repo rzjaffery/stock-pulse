@@ -98,7 +98,7 @@ export default function TransferModal({
             ) : (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-500"
+                    className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500"
                 >
                     + New Transfer Order
                 </button>
@@ -106,10 +106,10 @@ export default function TransferModal({
 
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-lg p-6 text-slate-100 shadow-2xl space-y-4">
-                        <div className="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <div className="bg-emerald-900 border border-emerald-800 rounded-xl w-full max-w-lg p-6 text-emerald-100 shadow-2xl space-y-4">
+                        <div className="flex justify-between items-center border-b border-emerald-800 pb-3">
                             <h3 className="text-base font-bold text-white">Create Inter-Warehouse Transfer</h3>
-                            <button onClick={() => setIsOpen(false)} className="text-slate-400 hover:text-white">
+                            <button onClick={() => setIsOpen(false)} className="text-emerald-400 hover:text-white">
                                 ✕
                             </button>
                         </div>
@@ -128,13 +128,13 @@ export default function TransferModal({
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">
+                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
                                     Select Product
                                 </label>
                                 <select
                                     value={formData.productId}
                                     onChange={(e) => setFormData({ ...formData, productId: e.target.value })}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                 >
                                     {products.map((p) => (
                                         <option key={p.id} value={p.id}>
@@ -146,13 +146,13 @@ export default function TransferModal({
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
                                         Source Warehouse
                                     </label>
                                     <select
                                         value={formData.sourceWarehouseId}
                                         onChange={(e) => setFormData({ ...formData, sourceWarehouseId: e.target.value })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     >
                                         {warehouses.map((w) => (
                                             <option key={w.id} value={w.id}>
@@ -163,13 +163,13 @@ export default function TransferModal({
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
                                         Destination Warehouse
                                     </label>
                                     <select
                                         value={formData.targetWarehouseId}
                                         onChange={(e) => setFormData({ ...formData, targetWarehouseId: e.target.value })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     >
                                         {warehouses.map((w) => (
                                             <option key={w.id} value={w.id}>
@@ -182,7 +182,7 @@ export default function TransferModal({
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
                                         Quantity
                                     </label>
                                     <input
@@ -191,12 +191,12 @@ export default function TransferModal({
                                         required
                                         value={formData.quantity}
                                         onChange={(e) => setFormData({ ...formData, quantity: Number(e.target.value) })}
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">
+                                    <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
                                         Initial Status
                                     </label>
                                     <select
@@ -207,7 +207,7 @@ export default function TransferModal({
                                                 status: e.target.value as 'PENDING' | 'IN_TRANSIT' | 'COMPLETED',
                                             })
                                         }
-                                        className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                        className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                     >
                                         <option value="IN_TRANSIT">In Transit</option>
                                         <option value="PENDING">Pending</option>
@@ -217,7 +217,7 @@ export default function TransferModal({
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">
+                                <label className="block text-xs font-semibold uppercase text-emerald-400 mb-1">
                                     Notes / Shipment Order Ref
                                 </label>
                                 <input
@@ -225,22 +225,22 @@ export default function TransferModal({
                                     placeholder="e.g. Expedited air freight shipment"
                                     value={formData.notes}
                                     onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-xs text-slate-100 focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    className="w-full bg-emerald-800 border border-emerald-700 rounded-lg p-2 text-xs text-emerald-100 focus:ring-2 focus:ring-emerald-500 outline-none"
                                 />
                             </div>
 
-                            <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
+                            <div className="flex justify-end gap-3 pt-3 border-t border-emerald-800">
                                 <button
                                     type="button"
                                     onClick={() => setIsOpen(false)}
-                                    className="px-4 py-2 text-xs text-slate-400 hover:text-white"
+                                    className="px-4 py-2 text-xs text-emerald-400 hover:text-white"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={isPending}
-                                    className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-500 disabled:opacity-50"
+                                    className="px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-500 disabled:opacity-50"
                                 >
                                     {isPending ? 'Processing...' : 'Dispatch Transfer'}
                                 </button>

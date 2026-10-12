@@ -34,11 +34,11 @@ export default function StockTable({
     });
 
     return (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+        <div className="bg-emerald-900 border border-emerald-800 rounded-xl p-6 space-y-4">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div>
                     <h2 className="text-lg font-bold text-white">Product Stock Catalog</h2>
-                    <p className="text-xs text-slate-400">Live quantity across active locations</p>
+                    <p className="text-xs text-emerald-400">Live quantity across active locations</p>
                 </div>
 
                 {/* Filters */}
@@ -48,13 +48,13 @@ export default function StockTable({
                         placeholder="Search SKU or Product..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                        className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-1.5 text-sm text-emerald-200 placeholder-emerald-500 focus:outline-none focus:border-emerald-500"
                     />
 
                     <select
                         value={selectedWarehouse}
                         onChange={(e) => setSelectedWarehouse(e.target.value)}
-                        className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                        className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-1.5 text-sm text-emerald-200 focus:outline-none focus:border-emerald-500"
                     >
                         <option value="all">All Warehouses</option>
                         {warehouses.map((wh) => (
@@ -68,8 +68,8 @@ export default function StockTable({
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-300">
-                    <thead className="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
+                <table className="w-full text-left text-sm text-emerald-300">
+                    <thead className="bg-emerald-950/50 text-emerald-400 uppercase text-xs border-b border-emerald-800">
                     <tr>
                         <th className="py-3 px-4">Product Name</th>
                         <th className="py-3 px-4">SKU</th>
@@ -79,10 +79,10 @@ export default function StockTable({
                         <th className="py-3 px-4 text-center">Status</th>
                     </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-emerald-800/60">
                     {filteredStock.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="py-8 text-center text-slate-500">
+                            <td colSpan={6} className="py-8 text-center text-emerald-500">
                                 No stock items found matching criteria.
                             </td>
                         </tr>
@@ -90,11 +90,11 @@ export default function StockTable({
                         filteredStock.map((item) => {
                             const isLowStock = item.quantity <= item.minThreshold;
                             return (
-                                <tr key={item.id} className="hover:bg-slate-800/40 transition">
+                                <tr key={item.id} className="hover:bg-emerald-800/40 transition">
                                     <td className="py-3 px-4 font-medium text-white">{item.product.name}</td>
-                                    <td className="py-3 px-4 font-mono text-xs text-indigo-400">{item.product.sku}</td>
-                                    <td className="py-3 px-4 text-slate-400">{item.warehouse.name}</td>
-                                    <td className="py-3 px-4 text-right font-medium text-slate-200">
+                                    <td className="py-3 px-4 font-mono text-xs text-emerald-400">{item.product.sku}</td>
+                                    <td className="py-3 px-4 text-emerald-400">{item.warehouse.name}</td>
+                                    <td className="py-3 px-4 text-right font-medium text-emerald-200">
                                         ${item.product.unitPrice.toFixed(2)}
                                     </td>
                                     <td className="py-3 px-4 text-right font-bold text-white">{item.quantity}</td>

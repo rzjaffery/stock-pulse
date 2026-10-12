@@ -23,18 +23,18 @@ export default function MovementsTable({ initialMovements }: { initialMovements:
     );
 
     return (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 space-y-4">
+        <div className="bg-emerald-900 border border-emerald-800 rounded-xl p-6 space-y-4">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div>
                     <h2 className="text-lg font-bold text-white">Stock Movement History</h2>
-                    <p className="text-xs text-slate-400">Audit trail for transfers, additions, and adjustments</p>
+                    <p className="text-xs text-emerald-400">Audit trail for transfers, additions, and adjustments</p>
                 </div>
 
                 {/* Movement Type Filter */}
                 <select
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
-                    className="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="bg-emerald-950 border border-emerald-800 rounded-lg px-3 py-1.5 text-sm text-emerald-200 focus:outline-none focus:border-emerald-500"
                 >
                     <option value="all">All Movement Types</option>
                     <option value="TRANSFER">Transfer</option>
@@ -46,8 +46,8 @@ export default function MovementsTable({ initialMovements }: { initialMovements:
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-300">
-                    <thead className="bg-slate-950/50 text-slate-400 uppercase text-xs border-b border-slate-800">
+                <table className="w-full text-left text-sm text-emerald-300">
+                    <thead className="bg-emerald-950/50 text-emerald-400 uppercase text-xs border-b border-emerald-800">
                     <tr>
                         <th className="py-3 px-4">Date</th>
                         <th className="py-3 px-4">Product</th>
@@ -57,17 +57,17 @@ export default function MovementsTable({ initialMovements }: { initialMovements:
                         <th className="py-3 px-4">Operator</th>
                     </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/60">
+                    <tbody className="divide-y divide-emerald-800/60">
                     {filtered.length === 0 ? (
                         <tr>
-                            <td colSpan={6} className="py-8 text-center text-slate-500">
+                            <td colSpan={6} className="py-8 text-center text-emerald-500">
                                 No stock movement history recorded yet.
                             </td>
                         </tr>
                     ) : (
                         filtered.map((m) => (
-                            <tr key={m.id} className="hover:bg-slate-800/40 transition">
-                                <td className="py-3 px-4 text-xs text-slate-400">
+                            <tr key={m.id} className="hover:bg-emerald-800/40 transition">
+                                <td className="py-3 px-4 text-xs text-emerald-400">
                                     {new Date(m.createdAt).toLocaleDateString(undefined, {
                                         month: 'short',
                                         day: 'numeric',
@@ -77,18 +77,18 @@ export default function MovementsTable({ initialMovements }: { initialMovements:
                                 </td>
                                 <td className="py-3 px-4 font-medium text-white">
                                     {m.product.name}
-                                    <span className="block text-xs font-mono text-slate-500">{m.product.sku}</span>
+                                    <span className="block text-xs font-mono text-emerald-500">{m.product.sku}</span>
                                 </td>
                                 <td className="py-3 px-4">
-                    <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    <span className="px-2 py-0.5 rounded text-xs font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       {m.type}
                     </span>
                                 </td>
-                                <td className="py-3 px-4 text-xs text-slate-300">
+                                <td className="py-3 px-4 text-xs text-emerald-300">
                                     {m.sourceWarehouse?.code || 'External'} $\rightarrow$ {m.targetWarehouse?.code || 'External'}
                                 </td>
                                 <td className="py-3 px-4 text-right font-bold text-white">{m.quantity}</td>
-                                <td className="py-3 px-4 text-xs text-slate-400">
+                                <td className="py-3 px-4 text-xs text-emerald-400">
                                     {m.user?.name || m.user?.email || 'System Admin'}
                                 </td>
                             </tr>
