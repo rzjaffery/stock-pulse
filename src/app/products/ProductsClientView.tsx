@@ -117,7 +117,7 @@ Wireless Optical Mouse,MS-WIRE-02,2.4GHz Ergonomic Mouse,24.50,WH-NORTH,200,20`;
                                             <td className="py-3.5 px-4 font-mono font-medium text-emerald-700">{p.sku}</td>
                                             <td className="py-3.5 px-4 text-slate-600">{p.category?.name || 'General Inventory'}</td>
                                             <td className="py-3.5 px-4 text-right font-semibold text-slate-900">
-                                                ${p.unitPrice.toFixed(2)}
+                                                Rs {p.unitPrice.toFixed(2)}
                                             </td>
                                             <td className="py-3.5 px-4 text-right font-bold text-emerald-800">
                                                 {totalStock.toLocaleString()}

@@ -72,7 +72,7 @@ export default function DashboardClientView({
                         </div>
                         <div className="mt-4">
                             <h3 className="text-2xl font-extrabold text-slate-900 font-serif">
-                                ${metrics.totalValuation.toLocaleString(undefined, {
+                                Rs {metrics.totalValuation.toLocaleString(undefined, {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2
                             })}
