@@ -25,6 +25,7 @@ export default function Sidebar({ user }: SidebarProps) {
         { label: 'Transfers', href: '/transfers', icon: '🚚' },
         { label: 'Procurement', href: '/procurement', icon: '📋' },
         { label: 'Audit Trail', href: '/audit', icon: '🛡️' },
+        { label: 'Team & Roles', href: '/users', icon: '👥 ' },
     ];
 
     return (
