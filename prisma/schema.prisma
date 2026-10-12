@@ -9,9 +9,8 @@ generator client {
 }
 
 enum Role {
-  ORG_ADMIN
-  WAREHOUSE_MANAGER
-  AUDITOR
+  ADMIN
+  MANAGER
   OPERATOR
 }
 
@@ -136,19 +135,17 @@ model Organization {
 }
 
 model User {
-  id             String   @id @default(uuid())
-  organizationId String
-  email          String   @unique
+  id             String          @id @default(uuid())
   name           String?
-  password       String // Hashed password for credentials auth
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
+  email          String          @unique
+  password       String?
+  role           Role            @default(OPERATOR) // Default role for new signups
+  organizationId String
   organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   auditLogs      AuditLog[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   stockMovements StockMovement[]
-
-  @@index([organizationId])
 }
 
 model Category {

@@ -18,12 +18,16 @@ export type CreateProductParams = {
 
 export async function createProductAction(params: CreateProductParams) {
     try {
-        const { userId, organizationId } = await getTenantContext();
+        const { userId, organizationId, role } = await getTenantContext();
         const { name, sku, description, unitPrice, initialQuantity, minThreshold } = params;
         let { warehouseId } = params;
 
         if (!name || !sku || unitPrice < 0 || initialQuantity < 0) {
             return { success: false, error: 'Please provide valid values for all required fields.' };
+        }
+
+        if (role !== 'ADMIN' && role !== 'MANAGER') {
+            return { success: false, error: 'Unauthorized: Only Managers and Admins can create products.' };
         }
 
         // Execute atomic creation of Product + Initial Stock Level + Audit Log

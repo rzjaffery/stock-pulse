@@ -16,7 +16,7 @@ export type TransferParams = {
 
 export async function transferStockAction(params: TransferParams) {
     try {
-        const { userId, organizationId } = await getTenantContext();
+        const { userId, organizationId, role } = await getTenantContext();
         const { productId, sourceWarehouseId, targetWarehouseId, quantity, notes } = params;
 
         if (!productId || !sourceWarehouseId || !targetWarehouseId || quantity <= 0) {
@@ -25,6 +25,10 @@ export async function transferStockAction(params: TransferParams) {
 
         if (sourceWarehouseId === targetWarehouseId) {
             return { success: false, error: 'Source and destination warehouses cannot be the same.' };
+        }
+
+        if (role !== 'ADMIN' && role !== 'MANAGER') {
+            return { success: false, error: 'Unauthorized: Operator clearance cannot authorize inter-warehouse transfers.' };
         }
 
         await db.$transaction(async (tx) => {

@@ -1,6 +1,5 @@
 // src/lib/tenant.ts
 import { auth } from '@/auth';
-import { db } from '@/lib/db';
 
 export async function getTenantContext() {
     const session = await auth();
@@ -11,6 +10,7 @@ export async function getTenantContext() {
 
     const userId = (session.user as any).id;
     const organizationId = (session.user as any).organizationId;
+    const role = (session.user as any).role || 'OPERATOR';
 
-    return { userId, organizationId };
+    return { userId, organizationId, role };
 }
