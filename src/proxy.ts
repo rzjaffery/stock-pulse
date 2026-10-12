@@ -8,12 +8,12 @@ export const proxy = auth((req) => {
 
     const isAuthPage = nextUrl.pathname.startsWith('/login') || nextUrl.pathname.startsWith('/signup');
 
-    // If logged in and trying to visit login/signup, redirect to dashboard
+    // If logged in and visiting login/signup, send to dashboard
     if (isAuthPage && isLoggedIn) {
         return NextResponse.redirect(new URL('/', nextUrl));
     }
 
-    // If not logged in and trying to visit protected pages, redirect to login
+    // If not logged in and visiting protected routes, send to login
     if (!isAuthPage && !isLoggedIn) {
         return NextResponse.redirect(new URL('/login', nextUrl));
     }

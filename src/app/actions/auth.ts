@@ -24,7 +24,9 @@ export async function registerUserAction(formData: FormData) {
         // Ensure a default organization exists
         let org = await db.organization.findFirst();
         if (!org) {
-            org = await db.organization.create({ data: { name: 'Royal Emerald Enterprise' } });
+            org = await db.organization.create({
+                data: { name: 'Royal Emerald Enterprise' }
+            });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
