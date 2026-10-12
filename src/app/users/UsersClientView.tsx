@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { updateUserRoleAction } from '@/app/actions/users';
+import { updateUserRoleAction, createTeamMemberAction } from '@/app/actions/users';
 
 interface UserItem {
     id: string;
@@ -18,9 +18,17 @@ interface UsersClientViewProps {
 }
 
 export default function UsersClientView({ initialUsers, currentUserRole }: UsersClientViewProps) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [loadingId, setLoadingId] = useState<string | null>(null);
+    const [submitting, setSubmitting] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+    // New member form states
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [role, setRole] = useState<'MANAGER' | 'OPERATOR'>('OPERATOR');
 
     const handleRoleChange = async (userId: string, newRole: any) => {
         setErrorMsg(null);
@@ -37,6 +45,27 @@ export default function UsersClientView({ initialUsers, currentUserRole }: Users
         }
     };
 
+    const handleCreateMember = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setErrorMsg(null);
+        setSuccessMsg(null);
+        setSubmitting(true);
+
+        const res = await createTeamMemberAction({ name, email, password, role });
+        setSubmitting(false);
+
+        if (res.success) {
+            setIsModalOpen(false);
+            setName('');
+            setEmail('');
+            setPassword('');
+            setRole('OPERATOR');
+            setSuccessMsg('Team member created successfully.');
+        } else {
+            setErrorMsg(res.error || 'Failed to create team member.');
+        }
+    };
+
     return (
         <>
             <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex justify-between items-center">
@@ -46,6 +75,15 @@ export default function UsersClientView({ initialUsers, currentUserRole }: Users
                     </span>
                     <h1 className="text-xl font-bold text-slate-900 tracking-tight mt-1">Team & Permissions Management</h1>
                 </div>
+
+                {currentUserRole === 'ADMIN' && (
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-4 py-2 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer"
+                    >
+                        + Add Team Member
+                    </button>
+                )}
             </header>
 
             <main className="p-6 md:p-8 space-y-6 max-w-7xl">
@@ -115,6 +153,104 @@ export default function UsersClientView({ initialUsers, currentUserRole }: Users
                     </div>
                 </div>
             </main>
+
+            {/* Add Member Modal */}
+            {isModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in duration-150">
+                    <div
+                        className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="bg-gradient-to-r from-emerald-800 to-emerald-900 px-6 py-5 text-white flex justify-between items-center">
+                            <div>
+                                <h3 className="text-base font-bold font-serif">Add New Team Member</h3>
+                                <p className="text-xs text-emerald-200 mt-0.5">Provision an Operator or Manager account</p>
+                            </div>
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="w-8 h-8 rounded-full bg-emerald-950/35 hover:bg-emerald-950/60 flex items-center justify-center text-emerald-100 transition"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleCreateMember} className="p-6 space-y-4">
+                            <div>
+                                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                    Full Name
+                                </label>
+                                <input
+                                    type="text"
+                                    required
+                                    placeholder="e.g. Sarah Jenkins"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-emerald-600"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="sarah@enterprise.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-emerald-600"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                    Temporary Password
+                                </label>
+                                <input
+                                    type="password"
+                                    required
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-emerald-600"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                    Assign Role
+                                </label>
+                                <select
+                                    value={role}
+                                    onChange={(e) => setRole(e.target.value as any)}
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-emerald-600"
+                                >
+                                    <option value="OPERATOR">OPERATOR (Standard View & Request)</option>
+                                    <option value="MANAGER">MANAGER (Operations & Approvals)</option>
+                                </select>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="px-5 py-2 rounded-xl text-xs font-bold bg-emerald-700 hover:bg-emerald-800 text-white shadow-md shadow-emerald-900/10 transition disabled:opacity-50 cursor-pointer"
+                                >
+                                    {submitting ? 'Creating...' : 'Create Account'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
