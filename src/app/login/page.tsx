@@ -4,7 +4,8 @@
 import React, { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react'; // or call a custom server action handling signIn
+import { signIn } from 'next-auth/react';
+import {Metronome} from "lucide-react"; // or call a custom server action handling signIn
 
 export default function LoginPage() {
     const router = useRouter();
@@ -47,12 +48,12 @@ export default function LoginPage() {
                 {/* Header */}
                 <div className="text-center space-y-2">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center font-bold text-white text-xl mx-auto shadow-lg shadow-emerald-500/20 border border-emerald-400/30">
-                        S
+                        <Metronome size={20} strokeWidth={1.75} />
                     </div>
                     <h1 className="text-2xl font-black tracking-tight text-slate-900">StockPulse</h1>
-                    <p className="text-xs text-emerald-700/80 font-medium tracking-wide uppercase">
-                        Royal Emerald Enterprise Access
-                    </p>
+                    {/*<p className="text-xs text-emerald-700/80 font-medium tracking-wide uppercase">*/}
+                    {/*    Royal Emerald Enterprise Access*/}
+                    {/*</p>*/}
                 </div>
 
                 {error && (
@@ -105,7 +106,7 @@ export default function LoginPage() {
                     <p className="text-xs text-slate-400">
                         Need an enterprise account?{' '}
                         <Link href="/signup" className="text-emerald-700 hover:text-slate-600 font-bold underline underline-offset-4">
-                            Register Organization
+                            Sign Up
                         </Link>
                     </p>
                 </div>
