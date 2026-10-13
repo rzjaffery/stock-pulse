@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { quickRestockAction } from '@/app/actions/restock';
+import {AlertTriangle, CheckCircle2, X, Zap} from "lucide-react";
 
 interface StockItem {
     id: string;
@@ -53,7 +54,9 @@ export default function LowStockSection({ lowStockItems }: LowStockSectionProps)
         return (
             <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6">
                 <div className="flex items-center gap-3">
-                    <span className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700 text-lg">✨</span>
+          <span className="p-2.5 rounded-xl bg-emerald-50 text-emerald-700">
+            <CheckCircle2 className="w-5 h-5" />
+          </span>
                     <div>
                         <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Inventory Health Optimal</h2>
                         <p className="text-xs text-slate-500">All warehouse stock levels are currently above their safety thresholds.</p>
@@ -67,7 +70,9 @@ export default function LowStockSection({ lowStockItems }: LowStockSectionProps)
         <div className="bg-white border border-amber-200 rounded-2xl shadow-sm p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-4">
                 <div className="flex items-center gap-3">
-                    <span className="p-2 rounded-xl bg-amber-50 text-amber-700 text-base">⚠️</span>
+          <span className="p-2 rounded-xl bg-amber-50 text-amber-700">
+            <AlertTriangle className="w-5 h-5" />
+          </span>
                     <div>
                         <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wide">Low Stock & Reorder Alerts</h2>
                         <p className="text-xs text-slate-500">{lowStockItems.length} SKU stock levels require immediate replenishment</p>
@@ -107,7 +112,7 @@ export default function LowStockSection({ lowStockItems }: LowStockSectionProps)
                                     onClick={() => setSelectedItem(item)}
                                     className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-lg shadow-sm transition text-xs cursor-pointer"
                                 >
-                                    ⚡ Quick Restock
+                                    <Zap className="w-3.5 h-3.5" /> Quick Restock
                                 </button>
                             </td>
                         </tr>
@@ -132,7 +137,7 @@ export default function LowStockSection({ lowStockItems }: LowStockSectionProps)
                                 onClick={() => setSelectedItem(null)}
                                 className="w-8 h-8 rounded-full bg-emerald-950/30 hover:bg-emerald-950/50 flex items-center justify-center text-emerald-100 transition"
                             >
-                                ✕
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
 

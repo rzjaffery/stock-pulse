@@ -6,6 +6,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import ProfileModal from './ProfileModal';
+import {
+    ChartLine,
+    ChartNoAxesGantt,
+    Cross,
+    ListCheck,
+    LogOut,
+    Metronome,
+    Package,
+    ShieldPlus, UserPen,
+    Users,
+    Van,
+    Warehouse
+} from "lucide-react";
 
 interface SidebarProps {
     user?: {
@@ -19,13 +32,14 @@ export default function Sidebar({ user }: SidebarProps) {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const navItems = [
-        { label: 'Dashboard', href: '/', icon: '📊' },
-        { label: 'Products Catalog', href: '/products', icon: '📦' },
-        { label: 'Warehouses', href: '/warehouses', icon: '🏭' },
-        { label: 'Transfers', href: '/transfers', icon: '🚚' },
-        { label: 'Procurement', href: '/procurement', icon: '📋' },
-        { label: 'Audit Trail', href: '/audit', icon: '🛡️' },
-        { label: 'Team & Roles', href: '/users', icon: '👥 ' },
+        { label: 'Dashboard', href: '/', icon: <ChartNoAxesGantt size={20} strokeWidth={1.75} /> },
+        { label: 'Products Catalog', href: '/products', icon: <Package size={20} strokeWidth={1.75} /> },
+        { label: 'Warehouses', href: '/warehouses', icon: <Warehouse size={20} strokeWidth={1.75} /> },
+        { label: 'Transfers', href: '/transfers', icon: <Van size={20} strokeWidth={1.75} /> },
+        { label: 'Analytics', href: '/analytics', icon: <ChartLine size={20} strokeWidth={1.75} /> },
+        { label: 'Procurement', href: '/procurement', icon: <ListCheck size={20} strokeWidth={1.75} /> },
+        { label: 'Audit Trail', href: '/audit', icon: <ShieldPlus size={20} strokeWidth={1.75} /> },
+        { label: 'Team & Roles', href: '/users', icon: <Users size={20} strokeWidth={1.75} /> },
     ];
 
     return (
@@ -34,11 +48,11 @@ export default function Sidebar({ user }: SidebarProps) {
                 {/* Brand Header */}
                 <div className="p-5 border-b border-slate-200 flex items-center gap-3">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-700 to-emerald-900 flex items-center justify-center font-bold text-white text-lg shadow-md font-serif">
-                        S
+                        <Metronome size={20} strokeWidth={1.75} />
                     </div>
                     <div>
                         <h2 className="font-bold text-slate-900 tracking-wide text-sm font-serif">STOCKPULSE</h2>
-                        <span className="text-[10px] text-emerald-700 font-bold uppercase tracking-widest">Royal Emerald</span>
+                        {/*<span className="text-[10px] text-emerald-700 font-bold uppercase tracking-widest">Royal Emerald</span>*/}
                     </div>
                 </div>
 
@@ -82,7 +96,7 @@ export default function Sidebar({ user }: SidebarProps) {
                             href="/profile"
                             className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition"
                         >
-                            👤 Profile
+                            <UserPen size={20} strokeWidth={1.75} /> Profile
                         </Link>
 
                         {/* Logout Button */}
@@ -91,7 +105,7 @@ export default function Sidebar({ user }: SidebarProps) {
                             title="Sign Out"
                             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
                         >
-                            🚪
+                            <LogOut size={20} strokeWidth={1.75} />
                         </button>
                     </div>
                 </div>

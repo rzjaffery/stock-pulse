@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { transferStockAction } from '@/app/actions/transfer';
+import { Forklift} from "lucide-react";
 
 interface Warehouse {
     id: string;
@@ -94,7 +95,7 @@ export default function TransfersClientView({
                     onClick={() => setIsModalOpen(true)}
                     className="px-4 py-2 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl shadow-sm transition flex items-center gap-2 cursor-pointer"
                 >
-                    🚚 Initiate Stock Transfer
+                    <Forklift className='w-3.5 h-3.5'/> Initiate Stock Transfer
                 </button>
             </header>
 
@@ -273,7 +274,7 @@ export default function TransfersClientView({
                                     onClick={() => setIsModalOpen(false)}
                                     className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition"
                                 >
-                                    Cancel
+                                     Cancel
                                 </button>
                                 <button
                                     type="submit"

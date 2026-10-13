@@ -3,6 +3,17 @@
 
 import React from 'react';
 import Link from 'next/link';
+import {
+    ArrowRight,
+    ArrowRightLeft,
+    Box,
+    Boxes,
+    LayoutArrowDown,
+    ShieldHalf,
+    SquareChartGantt,
+    Wallet,
+    Warehouse
+} from "lucide-react";
 
 interface DashboardClientViewProps {
     metrics: {
@@ -48,13 +59,13 @@ export default function DashboardClientView({
                         href="/products"
                         className="px-3.5 py-2 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl shadow-sm transition flex items-center gap-2"
                     >
-                        📦 Manage Products
+                        <SquareChartGantt size={20} strokeWidth={1.75}  /> Manage Products
                     </Link>
                     <Link
                         href="/transfers"
                         className="px-3.5 py-2 text-xs font-semibold bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl transition flex items-center gap-2"
                     >
-                        🚚 Stock Transfers
+                        <ArrowRightLeft size={20} strokeWidth={1.75} /> Stock Transfers
                     </Link>
                 </div>
             </header>
@@ -68,7 +79,7 @@ export default function DashboardClientView({
                         className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Inventory Valuation</span>
-                            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm">💰</span>
+                            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm"><Wallet size={20} strokeWidth={1.75} /></span>
                         </div>
                         <div className="mt-4">
                             <h3 className="text-2xl font-extrabold text-slate-900 font-serif">
@@ -88,7 +99,7 @@ export default function DashboardClientView({
                         <div className="flex items-center justify-between">
                             <span
                                 className="text-xs font-bold uppercase tracking-wider text-slate-500">Active SKUs</span>
-                            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm">📦</span>
+                            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm"><Boxes size={20} strokeWidth={1.75} /></span>
                         </div>
                         <div className="mt-4">
                             <h3 className="text-2xl font-extrabold text-slate-900 font-serif">
@@ -104,7 +115,7 @@ export default function DashboardClientView({
                         <div className="flex items-center justify-between">
                             <span
                                 className="text-xs font-bold uppercase tracking-wider text-slate-500">Low Stock Alerts</span>
-                            <span className="p-2 rounded-xl bg-amber-50 text-amber-700 text-sm">⚠️</span>
+                            <span className="p-2 rounded-xl bg-amber-50 text-amber-700 text-sm"><LayoutArrowDown size={20} strokeWidth={1.75} /></span>
                         </div>
                         <div className="mt-4">
                             <h3 className="text-2xl font-extrabold text-slate-900 font-serif">
@@ -119,7 +130,7 @@ export default function DashboardClientView({
                         className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Active Warehouses</span>
-                            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm">🏭</span>
+                            <span className="p-2 rounded-xl bg-emerald-50 text-emerald-700 text-sm"><Warehouse size={20} strokeWidth={1.75} /></span>
                         </div>
                         <div className="mt-4">
                             <h3 className="text-2xl font-extrabold text-slate-900 font-serif">
@@ -140,7 +151,7 @@ export default function DashboardClientView({
                             <p className="text-xs text-slate-500">Recent operational logs across your organization</p>
                         </div>
                         <Link href="/audit" className="text-xs font-bold text-emerald-700 hover:underline">
-                            View Full Audit Trail →
+                            View Full Audit Trail
                         </Link>
                     </div>
 
@@ -156,7 +167,7 @@ export default function DashboardClientView({
                                     <div className="flex items-center gap-3">
                     <span
                         className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 font-bold text-xs flex items-center justify-center shrink-0">
-                      🛡️
+                      <ShieldHalf size={20} strokeWidth={1.75} />
                     </span>
                                         <div>
                                             <div className="flex items-center gap-2">

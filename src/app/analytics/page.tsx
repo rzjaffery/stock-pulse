@@ -27,7 +27,7 @@ export default async function AnalyticsPage() {
                         <div className="bg-white border border-slate-200 p-5 rounded-xl">
                             <span className="text-xs font-semibold uppercase text-emerald-700">Total Portfolio Value</span>
                             <p className="text-3xl font-extrabold mt-1 text-emerald-700">
-                                ${data.totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                                Rs {data.totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                             </p>
                         </div>
 
@@ -62,7 +62,7 @@ export default async function AnalyticsPage() {
                                         <div className="flex justify-between text-emerald-700">
                                             <span>Valuation:</span>
                                             <span className="font-bold text-slate-700">
-                        ${wh.totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        Rs {wh.totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </span>
                                         </div>
                                         <div className="flex justify-between text-emerald-700">

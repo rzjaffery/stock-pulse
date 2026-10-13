@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import AddWarehouseModal from '@/components/AddWarehouseModal';
 import BulkUploadModal from '@/components/BulkUploadModal';
 import { bulkImportWarehousesAction } from '@/app/actions/bulk';
+import {Download, Plus} from "lucide-react";
 
 interface WarehouseData {
     id: string;
@@ -42,13 +43,13 @@ Southern Sorting Facility,WH-SOUTH,"Dallas, TX"`;
                         onClick={() => setIsBulkModalOpen(true)}
                         className="px-3.5 py-2 text-xs font-semibold bg-slate-50 hover:bg-emerald-800 text-slate-700 border border-slate-300 rounded-lg flex items-center gap-2"
                     >
-                        📊 Bulk Import (CSV)
+                        <Download className='w-3.5 h-3.5'/> Bulk Import (CSV)
                     </button>
                     <button
                         onClick={() => setIsManualModalOpen(true)}
                         className="px-3.5 py-2 text-xs font-semibold bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg flex items-center gap-2"
                     >
-                        + Add Single Warehouse
+                        <Plus className='w-3.5 h-3.5'/> Add Single Warehouse
                     </button>
                 </div>
             </header>
