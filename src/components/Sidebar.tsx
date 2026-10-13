@@ -66,18 +66,24 @@ export default function Sidebar({ user }: SidebarProps) {
                 {/* Profile Card Footer */}
                 <div className="p-3 border-t border-slate-200 bg-white">
                     <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2">
-                        <button
-                            onClick={() => setIsProfileOpen(true)}
-                            className="flex items-center gap-2.5 text-left flex-1 hover:opacity-80 transition cursor-pointer"
+                        {/*<button*/}
+                        {/*    onClick={() => setIsProfileOpen(true)}*/}
+                        {/*    className="flex items-center gap-2.5 text-left flex-1 hover:opacity-80 transition cursor-pointer"*/}
+                        {/*>*/}
+                        {/*    <div className="w-8 h-8 rounded-lg bg-emerald-700 text-white font-bold text-xs flex items-center justify-center font-serif shadow-sm">*/}
+                        {/*        {user?.name ? user.name.charAt(0).toUpperCase() : 'O'}*/}
+                        {/*    </div>*/}
+                        {/*    <div className="overflow-hidden">*/}
+                        {/*        <p className="text-xs font-bold text-slate-900 truncate">{user?.name || 'Operator'}</p>*/}
+                        {/*        <p className="text-[10px] text-slate-500 truncate">{user?.email || 'Settings & Profile'}</p>*/}
+                        {/*    </div>*/}
+                        {/*</button>*/}
+                        <Link
+                            href="/profile"
+                            className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 transition"
                         >
-                            <div className="w-8 h-8 rounded-lg bg-emerald-700 text-white font-bold text-xs flex items-center justify-center font-serif shadow-sm">
-                                {user?.name ? user.name.charAt(0).toUpperCase() : 'O'}
-                            </div>
-                            <div className="overflow-hidden">
-                                <p className="text-xs font-bold text-slate-900 truncate">{user?.name || 'Operator'}</p>
-                                <p className="text-[10px] text-slate-500 truncate">{user?.email || 'Settings & Profile'}</p>
-                            </div>
-                        </button>
+                            👤 Profile
+                        </Link>
 
                         {/* Logout Button */}
                         <button
