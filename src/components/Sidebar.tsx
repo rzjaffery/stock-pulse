@@ -9,7 +9,7 @@ import ProfileModal from './ProfileModal';
 import {
     ChartLine,
     ChartNoAxesGantt,
-    Cross,
+    Cross, FileText,
     ListCheck,
     LogOut,
     Metronome,
@@ -40,6 +40,7 @@ export default function Sidebar({ user }: SidebarProps) {
         { label: 'Procurement', href: '/procurement', icon: <ListCheck size={20} strokeWidth={1.75} /> },
         { label: 'Audit Trail', href: '/audit', icon: <ShieldPlus size={20} strokeWidth={1.75} /> },
         { label: 'Team & Roles', href: '/users', icon: <Users size={20} strokeWidth={1.75} /> },
+        { label: 'Reports & Exports', href: '/report', icon: <FileText size={20} strokeWidth={1.75} /> },
     ];
 
     return (
