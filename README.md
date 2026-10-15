@@ -64,4 +64,44 @@ Built on Next.js, PostgreSQL, Prisma ORM, and Tailwind CSS, StockPulse provides 
 
 ---
 
+## 📸 Visual Overview
+
+### 1. Login Screen
+<img src="./public/screenshots/Login.png" alt="StockPulse Dashboard" width="800" height="400"/>
+
+### 2. SignUp Screen
+<img src="./public/screenshots/Signup.png" alt="StockPulse Dashboard" width="800" height="400"/>
+
+### 3. Dashboard Screen
+<img src="./public/screenshots/Dashboard.png" alt="StockPulse Dashboard" width="800" height="400"/>
+
+### 4. Products Catalog Screen
+<img src="./public/screenshots/Products.png" alt="StockPulse Dashboard" width="800" height="400"/>
+
+### 5. Warehouse Screen
+<img src="./public/screenshots/Warehouse.png" alt="StockPulse Dashboard" width="800" height="400"/>
+
+### 6. Transfer Screen
+<img src="./public/screenshots/Transfers.png" alt="StockPulse Dashboard" width="800" height="400"/>
+
+### 7. Analytics Screen
+<img src="./public/screenshots/Analytics.png" alt="Product Catalog" width="800" />
+
+### 8. Procurement & Purchase Orders Screen
+<img src="./public/screenshots/Procurement.png" alt="Procurement Module" width="800" />
+
+### 9. Audit Trail Screen
+<img src="./public/screenshots/Audit.png" alt="Procurement Module" width="800" />
+
+### 10. Team & Roles Screen
+<img src="./public/screenshots/Roles.png" alt="Procurement Module" width="800" />
+
+### 11. Reports & Exports Screen
+<img src="./public/screenshots/Reports.png" alt="Procurement Module" width="800" />
+
+### 12. Profile Screen
+<img src="./public/screenshots/Profile.png" alt="Procurement Module" width="800" />
+
+---
+
 *StockPulse — Operational Precision for Modern Supply Chains.*
