@@ -67,22 +67,22 @@ Built on Next.js, PostgreSQL, Prisma ORM, and Tailwind CSS, StockPulse provides 
 ## 📸 Visual Overview
 
 ### 1. Login Screen
-<img src="./public/screenshots/Login.png" alt="StockPulse Dashboard" width="800" height="400"/>
+<img src="./public/screenshots/Login.png" alt="StockPulse Dashboard" width="800" />
 
 ### 2. SignUp Screen
-<img src="./public/screenshots/Signup.png" alt="StockPulse Dashboard" width="800" height="400"/>
+<img src="./public/screenshots/Signup.png" alt="StockPulse Dashboard" width="800" />
 
 ### 3. Dashboard Screen
-<img src="./public/screenshots/Dashboard.png" alt="StockPulse Dashboard" width="800" height="400"/>
+<img src="./public/screenshots/Dashboard.png" alt="StockPulse Dashboard" width="800" />
 
 ### 4. Products Catalog Screen
-<img src="./public/screenshots/Products.png" alt="StockPulse Dashboard" width="800" height="400"/>
+<img src="./public/screenshots/Products.png" alt="StockPulse Dashboard" width="800" />
 
 ### 5. Warehouse Screen
-<img src="./public/screenshots/Warehouse.png" alt="StockPulse Dashboard" width="800" height="400"/>
+<img src="./public/screenshots/Warehouse.png" alt="StockPulse Dashboard" width="800" />
 
 ### 6. Transfer Screen
-<img src="./public/screenshots/Transfers.png" alt="StockPulse Dashboard" width="800" height="400"/>
+<img src="./public/screenshots/Transfers.png" alt="StockPulse Dashboard" width="800" />
 
 ### 7. Analytics Screen
 <img src="./public/screenshots/Analytics.png" alt="Product Catalog" width="800" />
