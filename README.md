@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StockPulse — Enterprise Multi-Tenant Inventory Management Platform
 
-## Getting Started
+**StockPulse** is a commercial-grade, multi-tenant inventory control and procurement engine engineered for high-volume distribution hubs, multi-warehouse logistics networks, and enterprise supply chain operations.
 
-First, run the development server:
+Built on Next.js, PostgreSQL, Prisma ORM, and Tailwind CSS, StockPulse provides real-time visibility across global supply chains with strict data isolation, role-based security, and actionable operational insights.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Key Product Capabilities
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🏢 Multi-Tenant Data Isolation
+* **Tenant-Scoped Architecture**: All system entities (products, warehouses, stock levels, suppliers, and purchase orders) are strictly isolated by an `organizationId` context, ensuring enterprise data segregation and security across organizations.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🛡️ Role-Based Access Control (RBAC)
+* **Tiered Security Clearances**: Enforces granular server-side action guards and interface access across three defined operational roles:
+    * **`ADMIN`**: Full administrative workspace governance, team provisioning, user role promotion/demotion, and system-wide audit visibility.
+    * **`MANAGER`**: Strategic inventory operations, purchase order issuance, shipment reception, and inter-warehouse stock transfer authorization.
+    * **`OPERATOR`**: Read-only tracking, inventory level inspection, and automated stock reorder request generation.
 
-## Learn More
+### 📦 Multi-Warehouse Stock Tracking & Transfers
+* **Centralized Inventory Matrix**: Track physical stock quantities, unit valuations, and safety reorder thresholds across distinct regional fulfillment centers.
+* **Inter-Warehouse Movements**: Transfer stock between regional distribution centers with atomic balance adjustments and immutable movement logs.
 
-To learn more about Next.js, take a look at the following resources:
+### 🏭 Automated Procurement & Supplier Hub
+* **Low-Stock Alert Triggers**: Automated threshold monitoring flags products reaching critical safety points for rapid reorder execution.
+* **Purchase Order (PO) Management**: Generate, track, and process multi-item purchase orders from vendor suppliers directly to target destination warehouses.
+* **Shipment Receiving Workflows**: One-click shipment reception updates physical warehouse stock balances and purchase order status lifecycle (`ISSUED` $\rightarrow$ `RECEIVED`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📊 Intelligence, Audit & Export Center
+* **Compliance Audit Trail**: Automated, immutable ledger capturing user actions, operational events, and inventory adjustments with timestamped metadata.
+* **Executive Data Exports**: One-click **CSV Spreadsheet generation** for Inventory Valuations, Stock Movements, Procurement Summaries, and Audit Logs.
+* **Print-Ready Reporting**: Built-in `@media print` layout formatting for generating official PDF summary receipts and hard-copy compliance reports.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🏗️ System Architecture & Technology Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Framework** | **Next.js (App Router)** | Server Actions, React Server Components, and optimized client rendering. |
+| **Language** | **TypeScript** | Strict end-to-end type safety and contract enforcement across modules. |
+| **Database** | **PostgreSQL (Supabase)** | Relational database hosting tenant schemas and transactional logs. |
+| **ORM** | **Prisma** | Schema migrations, type-safe query building, and relational modeling. |
+| **Authentication** | **NextAuth.js (Auth.js)** | Encrypted JWT session handling with RBAC role payload injection. |
+| **Styling & UI** | **Tailwind CSS & Lucide Icons** | Light Royal Emerald enterprise design theme with scalable vector SVG icons. |
+| **Security** | **Bcrypt.js** | Salted password hashing for workspace user credentials. |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🔐 Security & Data Governance
+
+* **Server Action Authorization**: Every data modification pass verifies both user session authenticity and role clearance before querying the database.
+* **Audit Transparency**: All mutations (stock creation, transfers, user role modifications, and supplier additions) record the operator's identity, timestamp, and details inside the organizational audit log.
+* **Credential Hygiene**: Password fields are hashed with salt rounds (`bcryptjs`) before persistence, ensuring user credentials remain secure.
+
+---
+
+## 🎨 User Experience & Interface Design
+
+* **Theme**: Light Royal Emerald palette optimized for corporate desktop operation.
+* **Navigation**: Persistent collapsible navigation sidebar with icon-driven UI pathways.
+* **Feedback Systems**: Real-time toast notifications, dynamic state loaders, and step-by-step confirmation modals for destructive or high-impact actions.
+* **Responsive Layouts**: Desktop-first layout optimization tailored for multi-monitor logistics environments and mobile inspection devices.
+
+---
+
+*StockPulse — Operational Precision for Modern Supply Chains.*
